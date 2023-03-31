@@ -28,7 +28,7 @@ class ProductManager {
     }
   } 
 
-  async getProducts() {
+  async getProducts(limit) {
     try {
       // Obtener los productos del archivo
       let products = [];
@@ -36,6 +36,12 @@ class ProductManager {
         const fileData = await fs.promises.readFile(this.path, 'utf8');
         products = JSON.parse(fileData);
       }
+
+      // Aplicar el limite si esta presente
+      if (limit) {
+        products = products.slice(0, limit);
+      }
+
       return products;
     } catch (error) {
       console.log('Error in getProducts:', error);
@@ -48,7 +54,7 @@ class ProductManager {
       const products = await this.getProducts();
 
       // Buscar el producto con el id especificado
-      const product = products.find(p => p.id === id);
+      const product = products.find(p => p.id === parseInt(id));
   
       return product;
 

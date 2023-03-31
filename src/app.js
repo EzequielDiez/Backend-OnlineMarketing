@@ -5,15 +5,16 @@ const app = express()
 
 const productManager = new ProductManager('products.json');
 
-    app.get('/products', (req, res) => {
+    app.get('/products', async (req, res) => {
         const limit = req.query.limit;
-        const products = productManager.getProducts(limit);
+        const products = await productManager.getProducts(limit);
         res.json({products});
     });
 
-    app.get('/products/:pid', (req, res) => {
+    app.get('/products/:pid', async (req, res) => {
         const productId = req.params.pid;
-        const product = productManager.getProductById(productId);
+        const product = await productManager.getProductById(productId);
+        console.log(product)
         res.json(product);
     });
   
