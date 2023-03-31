@@ -29,22 +29,19 @@ class ProductManager {
   } 
 
   async getProducts() {
-    try{
+    try {
       // Obtener los productos del archivo
       let products = [];
       if (fs.existsSync(this.path)) {
-        products = JSON.parse(await fs.promises.readFile(this.path, 'utf8'));
-      } else {
-        await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
+        const fileData = await fs.promises.readFile(this.path, 'utf8');
+        products = JSON.parse(fileData);
       }
-
       return products;
-
     } catch (error) {
       console.log('Error in getProducts:', error);
-      throw error
+      throw error;
     }
-  } 
+  }
 
   async getProductById(id) {
     try {
@@ -109,14 +106,14 @@ class ProductManager {
 
 // Probando la funcionalidad del codigo. //
 
-const productManager = new ProductManager('products.json');
+/* const productManager = new ProductManager('products.json'); */
 
-// Algunos productos:
+/* // Algunos productos:
 const product1 = { title: 'Template x9', description: 'Diseño de Feed x9 plantillas editables', price: 5000, thumbnail: '/producto1.jpg', code: 'TMP001', stock: 100};
 const product2 = { title: 'Template x12', description: 'Diseño de Feed x12 plantillas editables', price: 6500, thumbnail: '/producto2.jpg', code: 'TMP002', stock: 100};
 const product3 = { title: 'Template x15', description: 'Diseño de Feed x15 plantillas editables', price: 7500, thumbnail: '/producto3.jpg', code: 'TMP003', stock: 100};
-
-const testProductManager = async () => {
+ */
+/* const testProductManager = async () => {
   console.log('Agregando productos...');
   const productId1 = await productManager.addProduct(product1);
   console.log(`Producto agregado con id ${productId1}`);
@@ -125,7 +122,7 @@ const testProductManager = async () => {
   const productId3 = await productManager.addProduct(product3);
   console.log(`Producto agregado con id ${productId3}`);
 
-  /* // Obtener un producto por id
+  // Obtener un producto por id
   console.log('Obteniendo producto por id...');
   const product = await productManager.getProductById(productId2);
   console.log(`Producto obtenido:`, product);
@@ -147,7 +144,7 @@ const testProductManager = async () => {
     console.log('Producto eliminado correctamente');
   } else {
     console.log('No se pudo eliminar el producto');
-  } */
+  }
 
   // Obtener todos los productos
   console.log('Obteniendo todos los productos...');
@@ -155,6 +152,6 @@ const testProductManager = async () => {
   console.log(`Productos obtenidos:`, allProducts);
 }
 
-testProductManager();
+testProductManager(); */
 
 export default ProductManager

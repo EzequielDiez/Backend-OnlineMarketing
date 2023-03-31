@@ -1,0 +1,137 @@
+[
+  {
+    "title": "Template x9",
+    "description": "Diseño de Feed x9 plantillas editables",
+    "price": 5000,
+    "thumbnail": "/producto1.jpg",
+    "code": "TMP001",
+    "stock": 100,
+    "id": 1
+  },
+  {
+    "title": "Template x12",
+    "description": "Diseño de Feed x12 plantillas editables",
+    "price": 6500,
+    "thumbnail": "/producto2.jpg",
+    "code": "TMP002",
+    "stock": 100,
+    "id": 2
+  },
+  {
+    "title": "Template x15",
+    "description": "Diseño de Feed x15 plantillas editables",
+    "price": 7500,
+    "thumbnail": "/producto3.jpg",
+    "code": "TMP003",
+    "stock": 100,
+    "id": 3
+  },
+  {
+    "title": "Template x9",
+    "description": "Diseño de Feed x9 plantillas editables",
+    "price": 5000,
+    "thumbnail": "/producto1.jpg",
+    "code": "TMP001",
+    "stock": 100,
+    "id": 4
+  },
+  {
+    "title": "Template x12",
+    "description": "Diseño de Feed x12 plantillas editables",
+    "price": 6500,
+    "thumbnail": "/producto2.jpg",
+    "code": "TMP002",
+    "stock": 100,
+    "id": 5
+  },
+  {
+    "title": "Template x15",
+    "description": "Diseño de Feed x15 plantillas editables",
+    "price": 7500,
+    "thumbnail": "/producto3.jpg",
+    "code": "TMP003",
+    "stock": 100,
+    "id": 6
+  },
+  {
+    "title": "Template x9",
+    "description": "Diseño de Feed x9 plantillas editables",
+    "price": 5000,
+    "thumbnail": "/producto1.jpg",
+    "code": "TMP001",
+    "stock": 100,
+    "id": 7
+  },
+  {
+    "title": "Template x12",
+    "description": "Diseño de Feed x12 plantillas editables",
+    "price": 6500,
+    "thumbnail": "/producto2.jpg",
+    "code": "TMP002",
+    "stock": 100,
+    "id": 8
+  },
+  {
+    "title": "Template x15",
+    "description": "Diseño de Feed x15 plantillas editables",
+    "price": 7500,
+    "thumbnail": "/producto3.jpg",
+    "code": "TMP003",
+    "stock": 100,
+    "id": 9
+  },
+  {
+    "title": "Template x9",
+    "description": "Diseño de Feed x9 plantillas editables",
+    "price": 5000,
+    "thumbnail": "/producto1.jpg",
+    "code": "TMP001",
+    "stock": 100,
+    "id": 10
+  },
+  {
+    "title": "Template x12",
+    "description": "Diseño de Feed x12 plantillas editables",
+    "price": 6500,
+    "thumbnail": "/producto2.jpg",
+    "code": "TMP002",
+    "stock": 100,
+    "id": 11
+  },
+  {
+    "title": "Template x15",
+    "description": "Diseño de Feed x15 plantillas editables",
+    "price": 7500,
+    "thumbnail": "/producto3.jpg",
+    "code": "TMP003",
+    "stock": 100,
+    "id": 12
+  },
+  {
+    "title": "Template x9",
+    "description": "Diseño de Feed x9 plantillas editables",
+    "price": 5000,
+    "thumbnail": "/producto1.jpg",
+    "code": "TMP001",
+    "stock": 100,
+    "id": 13
+  },
+  {
+    "title": "Template x12",
+    "description": "Diseño de Feed x12 plantillas editables",
+    "price": 6500,
+    "thumbnail": "/producto2.jpg",
+    "code": "TMP002",
+    "stock": 100,
+    "id": 14
+  },
+  {
+    "title": "Template x15",
+    "description": "Diseño de Feed x15 plantillas editables",
+    "price": 7500,
+    "thumbnail": "/producto3.jpg",
+    "code": "TMP003",
+    "stock": 100,
+    "id": 15
+  }
+]

@@ -3,12 +3,12 @@ import ProductManager from './ProductManager.js';
 
 const app = express()
 
-const productManager = new ProductManager();
+const productManager = new ProductManager('products.json');
 
     app.get('/products', (req, res) => {
         const limit = req.query.limit;
         const products = productManager.getProducts(limit);
-        res.json({ products });
+        res.json({products});
     });
 
     app.get('/products/:pid', (req, res) => {
