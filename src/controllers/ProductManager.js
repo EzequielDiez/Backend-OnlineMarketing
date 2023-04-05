@@ -1,3 +1,4 @@
+import { log } from 'console';
 import fs from 'fs';
 
 class ProductManager {
@@ -13,15 +14,16 @@ class ProductManager {
     if (products.length > 0) {
       autoId = products[products.length - 1].id;
     }
-    product.id = autoId + 1;
+    // Asigna el ID como primer elemento del objeto.
+    const newProduct = Object.assign({ id: autoId + 1 }, product);  
 
     // Agregar el nuevo producto al array
-    products.push(product);
+    products.push(newProduct);
 
     // Guardar los productos en el archivo
     await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
 
-    return product.id;
+    return newProduct.id;
     } catch (error) {
       console.log('Error in addProduct:', error);
       throw error
@@ -70,7 +72,7 @@ class ProductManager {
     try {
       let products = await this.getProducts();
 
-      const productIndex = products.findIndex(p => p.id === id);
+      const productIndex = products.findIndex(p => p.id === parseInt(id));
   
       if (productIndex >= 0) {
         // Actualizar el producto con el nuevo contenido
@@ -92,7 +94,7 @@ class ProductManager {
     try {
       let products = await this.getProducts();
 
-      const productIndex = products.findIndex(p => p.id === id);
+      const productIndex = products.findIndex(p => p.id === parseInt(id));
   
       if (productIndex >= 0) {
         // Eliminar el producto del arreglo
