@@ -19,6 +19,7 @@ const productManager = new ProductManager('./src/db/products.json');
         res.status(200).json(product);
     });
 
+    // Agregar un producto al JSON
     ProductRouter.post('/', async (req, res) => {
         
         try {
@@ -47,6 +48,8 @@ const productManager = new ProductManager('./src/db/products.json');
         }
     });
 
+    // Actualizar producto:
+    
     ProductRouter.put('/:pid', async (req, res) => {
         
         try {
