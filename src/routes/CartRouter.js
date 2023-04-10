@@ -42,7 +42,7 @@ const productManager = new ProductManager('./src/db/products.json')
 
     // Obtener el carrito y el producto
     const cart = await cartManager.getCartById(cid);
-    const quantity = parseInt(req.body.quantity)
+    const quantity = 1
 
     // Buscar si el producto ya existe en el carrito
     const productIndex = cart.products.findIndex(p => p.product === parseInt(pid));
