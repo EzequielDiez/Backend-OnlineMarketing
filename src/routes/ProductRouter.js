@@ -9,7 +9,8 @@ const productManager = new ProductManager('./src/db/products.json');
         
         const limit = req.query.limit;
         const products = await productManager.getProducts(limit);
-        res.render('index', {products})
+        res.status(200).json({products});
+        /* res.render('index', {products}) */
     });
 
     ProductRouter.get('/:pid', async (req, res) => {
