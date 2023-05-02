@@ -1,4 +1,57 @@
-import fs from 'fs';
+import ProductMongooseDao from "../daos/productMongooseDaos.js";
+
+class ProductManager {
+
+  constructor() {
+    this.dao = new ProductMongooseDao()
+  }
+
+  async getAll(limit) {
+    try {
+        return this.dao.getAll(limit);
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  async getOne(id) {
+      try {
+          return this.dao.getOne(id);
+      } catch (error) {
+          throw error;
+      }
+  };
+
+  async create(data) {
+      try {
+          return this.dao.create(data);
+      } catch (error) {
+          throw error;
+      }
+  };
+
+  async update(id, body) {
+      try {
+          return this.dao.update(id, body, { new: true });
+      } catch (error) {
+          throw error;
+      }
+  };
+
+  async delete(id) {
+      try {
+          return this.dao.delete(id, { status: false }, { new: true });
+      } catch (error) {
+          throw error;
+      }
+  };
+  }
+
+export default ProductManager;
+
+
+/* import fs from 'fs';
+import productSchema from '../models/productSchema.js';
 
 class ProductManager {
   constructor(path) {
@@ -112,4 +165,4 @@ class ProductManager {
   }
 }
 
-export default ProductManager
+export default ProductManager */
