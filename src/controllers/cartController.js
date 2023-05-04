@@ -1,11 +1,24 @@
-import { Router } from "express";
-import { getCarts } from "../controllers/cartController.js";
+import CartManager from '../services/CartManager.js';
+import ProductManager from "../services/ProductManager.js";
 
-const CartRouter = Router();
 
-  CartRouter.get('/', getCarts);
+  export const getCarts = async (req, res) => {
 
-  CartRouter.post('/', );
+    const manager = new CartManager()
+    const carts = await manager.getAll();
+    console.log(carts);
+    res.send({ status: 'success', carts})
+    }
+
+/*   CartRouter.post('/', async (req, res) => {
+    try {
+      const newCart = await cartManager.addCart();
+      res.status(201).json({ cart: newCart });
+    } catch (error) {
+      console.log('Error in addCart:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
   CartRouter.get('/:cid', async (req, res) => {
         
@@ -42,8 +55,4 @@ const CartRouter = Router();
   } catch (error) {
     res.status(500).send('Error Server');
   }
-  });
-  
-
-
-export default CartRouter
+  }); */

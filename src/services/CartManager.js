@@ -1,47 +1,23 @@
 import fs from 'fs';
+import CartMongooseDao from '../daos/cartMongooseDaos.js';
 
 class CartManager {
-  constructor(path) {
-    this.path = path;
+  constructor() {
+    this.dao = new CartMongooseDao;
   }
 
-  async addCart() {
+  async create(data) {
     try {
-      const carts = await this.getCarts();
-        // Asignar un id autoincrementable  
-      let autoId = 0;
-      if (carts.length > 0) {
-        autoId = carts[carts.length - 1].id;
-      }
-      const newCart = { id: autoId + 1, products: [] };
-
-      // Agregar el nuevo producto al array
-      carts.push(newCart);
-
-      // Guardar los productos en el archivo      
-      await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
-
-      return newCart;
+      return this.dao.create(data);
     } catch (error) {
-      console.log('Error in addCart:', error);
       throw error;
     }
   }
 
-  async getCarts() {
+  async getAll() {
     try {
-      // Obtener los productos del archivo, si no existe, lo crea.
-      let carts = [];
-      if (fs.existsSync(this.path)) {
-        const fileData = await fs.promises.readFile(this.path, 'utf8');
-        carts = JSON.parse(fileData);
-      } else {
-        await fs.promises.writeFile(this.path, JSON.stringify(carts));
-      }
-  
-      return carts;
+      return this.dao.getAll();
     } catch (error) {
-      console.log('Error in getCarts:', error);
       throw error;
     }
   }

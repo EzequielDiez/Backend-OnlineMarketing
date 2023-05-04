@@ -23,7 +23,7 @@ void (async() =>
     app.use(express.urlencoded({extended: true}))
 
     app.use("/api/products", ProductRouter)
-/*     app.use("/api/carts", CartRouter) */
+    app.use("/api/carts", CartRouter)
 
     app.listen(8080, () => {
     console.log('Server started on port 8080');
