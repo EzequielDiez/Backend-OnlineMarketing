@@ -11,7 +11,7 @@ class CartMongooseDao
       return{
         id: cartDocument._id,
         products: [{
-          productId: cartDocument.productId,
+          product: cartDocument.product,
           quantity: cartDocument.quantity
         }]
       }
@@ -28,7 +28,7 @@ class CartMongooseDao
       return cartsDocument.map(document => ({
         id: document._id,
         products: [{
-          productId: document.productId,
+          product: document.product,
           quantity: document.quantity
         }]
       }))
@@ -47,7 +47,7 @@ class CartMongooseDao
       return{
         id: cartDocument._id,
         products: [{
-          productId: cartDocument.productId,
+          product: cartDocument.product,
           quantity: cartDocument.quantity
         }]
       }
@@ -58,27 +58,22 @@ class CartMongooseDao
     }
   }
 
-  async updateCart(id, update) {
+  async update(id, body) {
     try {
-      let carts = await this.getCarts();
-  
-      const cartIndex = carts.findIndex(c => c.id === parseInt(id));
-    
-      if (cartIndex >= 0) {
-        // Actualizar el carrito con el nuevo contenido
-        carts[cartIndex] = { ...carts[cartIndex], ...update };
-    
-        // Guardar los carritos actualizados en el archivo
-        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+      const cartDocument = await cartSchema.findByIdAndUpdate(id, body, { new: true })
+
+      return{
+        id: cartDocument._id,
+        products: [{
+          product: cartDocument.product,
+          quantity: cartDocument.quantity
+        }]
       }
-    
-      return cartIndex >= 0;
-  
     } catch (error) {
       console.log('Error in updateCart:', error);
       throw error
     }
-  }
+  } 
 
 }
 

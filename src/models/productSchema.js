@@ -10,7 +10,7 @@ const productSchema = new Schema({
     status: { type: Schema.Types.Boolean, default: true },
     stock: { type: Schema.Types.Number, require: true },
     category: { type: Schema.Types.String, require: true },
-    thumbnail: { type: Schema.Types.String, require: true },
+    thumbnails: { type: Schema.Types.Array, require: true },
 })
 
 export default mongoose.model(productCollection, productSchema)

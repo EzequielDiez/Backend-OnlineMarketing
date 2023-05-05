@@ -1,6 +1,4 @@
 import CartManager from '../services/CartManager.js';
-import ProductManager from "../services/ProductManager.js";
-
 
   export const getCarts = async (req, res) => {
 
@@ -10,31 +8,29 @@ import ProductManager from "../services/ProductManager.js";
     res.send({ status: 'success', carts})
     }
 
-/*   CartRouter.post('/', async (req, res) => {
-    try {
-      const newCart = await cartManager.addCart();
-      res.status(201).json({ cart: newCart });
-    } catch (error) {
-      console.log('Error in addCart:', error);
-      res.status(500).json({ error: 'Internal server error' });
+  export const addCart = async (req, res) => {
+
+    const manager = new CartManager()
+    const newCart = await manager.create();
+    res.send({ status: 'success', newCart });
     }
-  });
 
-  CartRouter.get('/:cid', async (req, res) => {
-        
+  export const getCartById = async (req, res) => {
+
     const cartId = req.params.cid;
-    const cart = await cartManager.getCartById(cartId);
-    res.status(200).json(cart);
-  });
+    const manager = new CartManager()
+    const cart = await manager.getOne(cartId);
+    res.send({ status: 'success', cart });
+  }
 
-  // Agregar un producto a un carrito
-  CartRouter.post('/:cid/product/:pid', async (req, res) => {
+  export const updateCart = async (req, res) => {
   try {
     // Obtener el id del carrito y del producto
     const { cid, pid } = req.params;
 
     // Obtener el carrito y el producto
-    const cart = await cartManager.getCartById(cid);
+    const manager = new CartManager()
+    const cart = await manager.getOne(cid);
     const quantity = 1
 
     // Buscar si el producto ya existe en el carrito
@@ -49,10 +45,10 @@ import ProductManager from "../services/ProductManager.js";
     }
 
     // Guardar el carrito actualizado en el archivo
-    await cartManager.updateCart(cid, cart);
+    await manager.update(cid, cart);
 
-    res.json(cart);
+    res.send({ status: 'success', cart });
   } catch (error) {
     res.status(500).send('Error Server');
   }
-  }); */
+  }

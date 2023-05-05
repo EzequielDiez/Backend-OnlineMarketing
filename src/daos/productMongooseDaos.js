@@ -15,7 +15,7 @@ class ProductMongooseDao
                 status: document.status,
                 stock: document.stock,
                 category: document.category,
-                thumbnail: document.thumbnail,
+                thumbnails: document.thumbnails,
             }))
         } catch (error) {
             console.error(error);
@@ -37,7 +37,7 @@ class ProductMongooseDao
                 status: productDocument.status,
                 stock: productDocument.stock,
                 category: productDocument.category,
-                thumbnail: productDocument.thumbnail,
+                thumbnails: productDocument.thumbnails,
             }
         } catch (error) {
             console.error(error);
@@ -58,7 +58,7 @@ class ProductMongooseDao
                 status: productDocument.status,
                 stock: productDocument.stock,
                 category: productDocument.category,
-                thumbnail: productDocument.thumbnail,
+                thumbnails: productDocument.thumbnails,
             }
         } catch (error) {
             console.error(error);
@@ -79,7 +79,7 @@ class ProductMongooseDao
                 status: productDocument.status,
                 stock: productDocument.stock,
                 category: productDocument.category,
-                thumbnail: productDocument.thumbnail,
+                thumbnails: productDocument.thumbnails,
             }
         } catch (error) {
             console.error(error);
@@ -100,7 +100,7 @@ class ProductMongooseDao
                 status: productDocument.status,
                 stock: productDocument.stock,
                 category: productDocument.category,
-                thumbnail: productDocument.thumbnail,
+                thumbnails: productDocument.thumbnails,
             }
         } catch (error) {
             console.error(error);
