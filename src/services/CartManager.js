@@ -1,4 +1,3 @@
-import fs from 'fs';
 import CartMongooseDao from '../daos/cartMongooseDaos.js';
 
 class CartManager {
@@ -8,7 +7,7 @@ class CartManager {
 
   async create(data) {
     try {
-      return this.dao.create(data);
+      return await this.dao.create(data);
     } catch (error) {
       throw error;
     }
@@ -16,7 +15,7 @@ class CartManager {
 
   async getAll() {
     try {
-      return this.dao.getAll();
+      return await this.dao.getAll();
     } catch (error) {
       throw error;
     }
@@ -24,7 +23,7 @@ class CartManager {
 
   async getOne(id) {
     try {
-      return this.dao.getOne(id)
+      return await this.dao.getOne(id)
     } catch (error) {
       throw error
     }
@@ -32,7 +31,7 @@ class CartManager {
 
   async update(id, body) {
     try {
-      return this.dao.update(id, body, { new: true })
+      return await this.dao.update(id, body)
     } catch (error) {
       throw error
     }

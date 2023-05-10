@@ -6,9 +6,15 @@ class ProductManager {
     this.dao = new ProductMongooseDao()
   }
 
-  async getAll(limit) {
+  async getAll(limit, sort) {
     try {
-        return this.dao.getAll(limit);
+        let products = await this.dao.getAll(limit);
+        if (sort === 'asc') {
+          products = products.sort((a, b) => a.price - b.price)
+        } else if (sort === 'desc') {
+          products = products.sort((a, b) => b.price - a.price)
+        }
+        return products
     } catch (error) {
         throw error;
     }

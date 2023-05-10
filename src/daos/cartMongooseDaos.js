@@ -1,4 +1,3 @@
-import fs from 'fs';
 import cartSchema from '../models/cartSchema.js';
 
 
@@ -10,10 +9,10 @@ class CartMongooseDao
 
       return{
         id: cartDocument._id,
-        products: [{
-          product: cartDocument.product,
-          quantity: cartDocument.quantity
-        }]
+        products: cartDocument.products.map(product => ({
+          product: product._id,
+          quantity: product.quantity
+        }))
       }
     } catch (error) {
       console.log('Error in addCart:', error);
@@ -27,12 +26,11 @@ class CartMongooseDao
 
       return cartsDocument.map(document => ({
         id: document._id,
-        products: [{
-          product: document.product,
-          quantity: document.quantity
-        }]
+        products: document.products.map(product => ({
+          product: product._id,
+          quantity: product.quantity
+        }))
       }))
-
     } catch (error) {
       console.log('Error in getCarts:', error);
       throw error;
@@ -46,10 +44,10 @@ class CartMongooseDao
 
       return{
         id: cartDocument._id,
-        products: [{
-          product: cartDocument.product,
-          quantity: cartDocument.quantity
-        }]
+        products: cartDocument.products.map(product => ({
+          product: product._id,
+          quantity: product.quantity
+        }))
       }
 
     } catch (error) {
@@ -63,11 +61,11 @@ class CartMongooseDao
       const cartDocument = await cartSchema.findByIdAndUpdate(id, body, { new: true })
 
       return{
-        id: cartDocument._id,
-        products: [{
-          product: cartDocument.product,
-          quantity: cartDocument.quantity
-        }]
+        id: cartDocument.id,
+        products: cartDocument.products.map(product => ({
+          product: product._id,
+          quantity: product.quantity
+        }))
       }
     } catch (error) {
       console.log('Error in updateCart:', error);

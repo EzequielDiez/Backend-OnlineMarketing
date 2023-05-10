@@ -2,9 +2,10 @@ import ProductManager from "../services/ProductManager.js";
 
 export const getProducts = async (req, res) => {
         
-    const limit = req.query.limit;
+    const limit = parseInt(req.query.limit) || 10
+    const sort = req.query.sort
     const manager = new ProductManager()
-    const products = await manager.getAll(limit);
+    const products = await manager.getAll(limit, sort);
     res.send({ status: 'success', products });
 };
 
