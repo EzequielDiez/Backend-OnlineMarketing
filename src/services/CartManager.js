@@ -36,6 +36,17 @@ class CartManager {
       throw error
     }
   }
+
+  async deleteCart(cartId) {
+    try {
+      await this.dao.getOne(cartId)
+
+      const { id } = await this.dao.getOne(cartId)
+      return this.dao.deleteCart(cartId, { _id: id, products: []})
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 export default CartManager;
