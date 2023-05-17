@@ -55,6 +55,7 @@ class CartMongooseDao
   async getOne(id) {
     try {
       const cartDocument = await cartSchema.findById(id)/* .populate(['products._id']) */
+      console.log('cartDocument', cartDocument);
       if (!cartDocument) return null
 
       return{

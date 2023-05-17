@@ -39,7 +39,7 @@ import CartManager from '../services/CartManager.js';
       const cart = await manager.getOne(cid);
       const quantity = 1;
   
-      const productIndex = cart.products.findIndex((p) => p._id.toString() == pid);
+      const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
   
       if (productIndex === -1) {
         cart.products.push({ _id: pid , quantity})
@@ -55,6 +55,28 @@ import CartManager from '../services/CartManager.js';
     }
   };
 
+  export const updateQuantityOnCart = async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      const { quantity } = req.body;
+      
+      const manager = new CartManager();
+      const cart = await manager.getOne(cid);
+      
+      const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
+      
+      if (productIndex !== -1) {
+        cart.products[productIndex].quantity = quantity;
+        const updatedCart = await manager.update(cid, cart);
+        res.send({ status: 'success', cart: updatedCart });
+      } else {
+        res.status(404).send('Product not found in cart');
+      }
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  };
+
   export const deleteCart = async (req, res) => {
     try {
       const { cid } = req.params;
@@ -66,7 +88,7 @@ import CartManager from '../services/CartManager.js';
     }
   }
 
-  export const deleteProductFromCart = async (req, res) => {
+/*   export const deleteProductFromCart = async (req, res) => {
     try {
       const { cid, pid } = req.params;
       const manager = new CartManager();
@@ -75,4 +97,25 @@ import CartManager from '../services/CartManager.js';
     } catch (error) {
       res.status(500).send('Error Server')
     }
-  }
+  } */
+
+  export const deleteProductFromCart = async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      
+      const manager = new CartManager();
+      const cart = await manager.getOne(cid);
+      
+      const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
+      
+      if (productIndex !== -1) {
+        cart.products.splice(productIndex, 1);
+        const updatedCart = await manager.update(cid, cart);
+        res.send({ status: 'success', cart: updatedCart });
+      } else {
+        res.status(404).send('Product not found in cart');
+      }
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  };
