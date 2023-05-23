@@ -88,17 +88,6 @@ import CartManager from '../services/CartManager.js';
     }
   }
 
-/*   export const deleteProductFromCart = async (req, res) => {
-    try {
-      const { cid, pid } = req.params;
-      const manager = new CartManager();
-      const result = await manager.deleteProductFromCart(cid, pid)
-      res.send({ status: 'success', result})
-    } catch (error) {
-      res.status(500).send('Error Server')
-    }
-  } */
-
   export const deleteProductFromCart = async (req, res) => {
     try {
       const { cid, pid } = req.params;

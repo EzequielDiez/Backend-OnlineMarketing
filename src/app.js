@@ -2,14 +2,15 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import express from 'express';
-/* import {engine} from 'express-handlebars'
-import {resolve} from 'path'
-import { Server } from 'socket.io'; */
+import mongoose from "mongoose";
+import session from "express-session";
+import mongoStore from "connect-mongo";
+import cookieParser from "cookie-parser";
+
 import ProductRouter from './routes/ProductRouter.js'
 import CartRouter from './routes/CartRouter.js'
-/* import ViewsRouter from './routes/ViewsRouter.js';
-import ProductManager from './controllers/ProductManager.js'; */
-import mongoose from "mongoose";
+import userRouter from './routes/UserRouter.js'
+import sessionRouter from "./routes/SessionRouter.js";
 
 void (async() => 
 {
@@ -19,9 +20,22 @@ void (async() =>
     })
 
     const app = express();
+
     app.use(express.json());
     app.use(express.urlencoded({extended: true}))
+    app.use(cookieParser())
+    app.use(session({
+        store: mongoStore.create({
+            mongoUrl: process.env.MONGO_DB_URI,
+            ttl: 100
+        }),
+        secret: 'AgU4nT3R1v3R',
+        resave: false,
+        saveUninitialized: false
+    }))
 
+    app.use("/api/sessions", sessionRouter)
+    app.use("/api/users", userRouter)
     app.use("/api/products", ProductRouter)
     app.use("/api/carts", CartRouter)
 
