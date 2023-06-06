@@ -7,10 +7,14 @@ import session from "express-session";
 import mongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 
+import sessionRouter from "./routes/SessionRouter.js";
+import userRouter from './routes/UserRouter.js'
 import ProductRouter from './routes/ProductRouter.js'
 import CartRouter from './routes/CartRouter.js'
-import userRouter from './routes/UserRouter.js'
-import sessionRouter from "./routes/SessionRouter.js";
+import roleRouter from "./routes/RoleRouter.js";
+import errorHandler from "./middlewares/errorHandler.js";
+
+
 
 void (async() => 
 {
@@ -38,6 +42,8 @@ void (async() =>
     app.use("/api/users", userRouter)
     app.use("/api/products", ProductRouter)
     app.use("/api/carts", CartRouter)
+    app.use("/api/roles", roleRouter)
+    app.use(errorHandler)
 
     app.listen(8080, () => {
     console.log('Server started on port 8080');

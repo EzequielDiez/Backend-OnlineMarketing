@@ -12,7 +12,8 @@ class UserMongooseDao
             firstName: document.firstName,
             lastName: document.lastName,
             email: document.email,
-            age: document.age
+            age: document.age,
+            isAdmin: document.isAdmin
             }));
 
             return userDocuments;
@@ -35,7 +36,9 @@ class UserMongooseDao
                 lastName: userDocument?.lastName,
                 email: userDocument?.email,
                 age: userDocument?.age,
-                password: userDocument?.password
+                password: userDocument?.password,
+                isAdmin: userDocument.isAdmin,
+                role: userDocument.role
             }
         } catch (error) {
             console.error(error);
@@ -55,7 +58,9 @@ class UserMongooseDao
                 lastName: userDocument?.lastName,
                 email: userDocument?.email,
                 age: userDocument?.age,
-                password: userDocument?.password
+                password: userDocument?.password,
+                isAdmin: userDocument?.isAdmin,
+                role: userDocument.role
             }
         } catch (error) {
             console.error(error);
@@ -74,6 +79,7 @@ class UserMongooseDao
                 email: userDocument.email,
                 age: userDocument.age,
                 password: userDocument.password,
+                isAdmin: userDocument?.isAdmin
             }
         } catch (error) {
             console.error(error);
@@ -92,7 +98,8 @@ class UserMongooseDao
                 firstName: userDocument.firstName,
                 lastName: userDocument.lastName,
                 email: userDocument.email,
-                age: userDocument.age
+                age: userDocument.age,
+                isAdmin: userDocument?.isAdmin
             }
         } catch (error) {
             console.error(error);

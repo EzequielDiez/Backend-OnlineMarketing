@@ -1,57 +1,51 @@
-import UserManager from "../services/UserManager.js";
-import { createHash, generateToken, isValidPassword } from "../utils/index.js";
+import SessionManager from "../services/SessionManager.js";
+import loginValidation from "../validations/session/loginValidation.js";
 
-
-export const login = async  (req, res) =>
+export const login = async  (req, res, next) =>
 {
+  try
+  {
     const { email, password } = req.body;
 
-    if (!email && !password)
-    {
-        throw new Error('Email and Password invalid format.');
-    }
+    await loginValidation.parseAsync(req.body);
 
-    const manager = new UserManager();
-    const user = await manager.getOneByEmail(email);
-    const isHashedPassword = await isValidPassword(password, user.password);
+    const manager = new SessionManager();
+    const accessToken = await manager.login(email, password);
 
-    if (!isHashedPassword)
-    {
-        return res.status(401).send({ message: 'Login failed, invalid password.'})
-    }
-
-    const accessToken = await generateToken(user);
-
-    res.send({ accessToken, message: 'Login success!' });
+    res.cookie('accessToken', accessToken, {
+        maxAge: 60*60*1000,
+        httpOnly: true
+    }).send({ message: 'Login success!', accessToken })
+  }
+  catch (e)
+  {
+		next(e);
+	}
 };
 
-export const current = async  (req, res) =>
+export const current = async  (req, res, next) =>
 {
-  res.status(200).send({ status: 'Success', payload: req.user });
+  try
+  {
+    res.status(200).send({ status: 'Success', payload: req.user });
+  }
+  catch (e)
+  {
+		next(e);
+	}
 };
 
-export const signup = async (req, res) =>
+export const signup = async (req, res, next) =>
 {
-    const manager = new UserManager();
-
-    const payload = {
-      ...req.body,
-      password: await createHash(req.body.password, 10)
-    }
-
-    const user = await manager.create(payload);
+  try
+  {
+    const manager = new SessionManager();
+    const user = await manager.signup(req.body);
 
     res.status(201).send({ status: 'success', user, message: 'User created.' });
+  }
+  catch (e)
+  {
+		next(e);
+	}
 };
-
-/* export const logout = async (req, res) =>
-{
-  req.session.destroy( err => {
-      if(!err)
-      {
-        return res.send({ message: 'Logout ok!' });
-      }
-
-      res.send({ message: 'Logout error!', body: err })
-  });
-}; */
