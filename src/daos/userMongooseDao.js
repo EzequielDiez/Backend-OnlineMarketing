@@ -1,3 +1,4 @@
+import cartSchema from "../models/cartSchema.js";
 import userSchema from "../models/userSchema.js";
 
 class UserMongooseDao
@@ -71,6 +72,11 @@ class UserMongooseDao
     async create(data) {
         try {
             const userDocument = await userSchema.create(data);
+
+            const cartDocument = await cartSchema.create({ products: [] })
+            
+            userDocument.cart = cartDocument._id
+            await userDocument.save()
 
             return {
                 id: userDocument._id,
