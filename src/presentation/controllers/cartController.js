@@ -1,4 +1,4 @@
-import CartManager from '../services/CartManager.js';
+import CartManager from "../../domain/managers/CartManager.js";
 
   export const getCarts = async (req, res) => {
     try {

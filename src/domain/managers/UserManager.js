@@ -1,4 +1,4 @@
-import UserMongooseDao from "../daos/userMongooseDao.js";
+import UserMongooseDao from "../../data/daos/userMongooseDao.js";
 
 class UserManager {
 

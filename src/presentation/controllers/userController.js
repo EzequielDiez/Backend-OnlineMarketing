@@ -1,4 +1,4 @@
-import UserManager from "../services/UserManager.js";
+import UserManager from "../../domain/managers/UserManager.js";
 
 export const list = async  (req, res) =>
 {

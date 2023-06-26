@@ -1,4 +1,4 @@
-import ProductMongooseDao from "../daos/productMongooseDaos.js";
+import ProductMongooseDao from "../../data/daos/productMongooseDaos.js";
 
 class ProductManager {
 

@@ -1,4 +1,4 @@
-import CartMongooseDao from '../daos/cartMongooseDaos.js';
+import CartMongooseDao from "../../data/daos/cartMongooseDaos.js";
 
 class CartManager {
   constructor() {

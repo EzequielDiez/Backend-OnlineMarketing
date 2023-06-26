@@ -7,10 +7,10 @@ const CartRouter = Router();
 
   CartRouter.get('/', auth, authorization('getAllCarts'), getCarts);
   CartRouter.post('/', auth, authorization('getOneCart'), addCart);
-  CartRouter.get('/:cid', getCartById);
-  CartRouter.post('/:cid/product/:pid', auth, updateCart);
-  CartRouter.delete('/:cid', deleteCart)
-  CartRouter.delete('/:cid/product/:pid', auth, deleteProductFromCart);
-  CartRouter.put('/:cid/product/:pid', auth, updateQuantityOnCart)
+  CartRouter.get('/:cid', auth, authorization('getOneCartById'), getCartById);
+  CartRouter.post('/:cid/product/:pid', auth, authorization('updateOneCart'), updateCart);
+  CartRouter.delete('/:cid', auth, authorization('deleteOneCart'), deleteCart)
+  CartRouter.delete('/:cid/product/:pid', auth, authorization('deleteProductOneCart'), deleteProductFromCart);
+  CartRouter.put('/:cid/product/:pid', auth, authorization('updateQuantityOneCart'), updateQuantityOnCart)
   
 export default CartRouter

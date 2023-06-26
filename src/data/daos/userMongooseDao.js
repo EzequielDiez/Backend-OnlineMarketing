@@ -14,7 +14,8 @@ class UserMongooseDao
             lastName: document.lastName,
             email: document.email,
             age: document.age,
-            isAdmin: document.isAdmin
+            cart: document.cart,
+            role: document.role,
             }));
 
             return userDocuments;
@@ -37,9 +38,8 @@ class UserMongooseDao
                 lastName: userDocument?.lastName,
                 email: userDocument?.email,
                 age: userDocument?.age,
-                password: userDocument?.password,
-                isAdmin: userDocument.isAdmin,
-                role: userDocument.role
+                cart: userDocument?.cart,
+                role: userDocument?.role,              
             }
         } catch (error) {
             console.error(error);
@@ -59,9 +59,8 @@ class UserMongooseDao
                 lastName: userDocument?.lastName,
                 email: userDocument?.email,
                 age: userDocument?.age,
-                password: userDocument?.password,
-                isAdmin: userDocument?.isAdmin,
-                role: userDocument.role
+                cart: userDocument?.cart,
+                role: userDocument.role,
             }
         } catch (error) {
             console.error(error);
@@ -84,8 +83,9 @@ class UserMongooseDao
                 lastName: userDocument.lastName,
                 email: userDocument.email,
                 age: userDocument.age,
+                cart: userDocument.cart,
+                role: userDocument.role,
                 password: userDocument.password,
-                isAdmin: userDocument?.isAdmin
             }
         } catch (error) {
             console.error(error);
@@ -105,7 +105,8 @@ class UserMongooseDao
                 lastName: userDocument.lastName,
                 email: userDocument.email,
                 age: userDocument.age,
-                isAdmin: userDocument?.isAdmin
+                cart: userDocument.cart,
+                role: userDocument.role,
             }
         } catch (error) {
             console.error(error);

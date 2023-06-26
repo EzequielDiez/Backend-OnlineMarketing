@@ -1,5 +1,5 @@
-import UserMongooseDao from "../daos/userMongooseDao.js";
-import {createHash, generateToken, isValidPassword} from "../utils/index.js";
+import UserMongooseDao from "../../data/daos/userMongooseDao.js";
+import {createHash, generateToken, isValidPassword} from "../../shared/index.js"
 import userCreateValidation from "../validations/user/userCreateValidation.js";
 import loginValidation from "../validations/session/loginValidation.js";
 
