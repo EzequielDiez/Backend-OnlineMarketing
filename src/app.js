@@ -1,17 +1,13 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-
-import mongoose from "mongoose";
-
 import AppFactory from "./presentation/factories/appFactory.js"
+import DbFactory from "./data/factories/DbFactory.js";
 
 void (async() => 
 {
-    await mongoose.connect(process.env.MONGO_DB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
+    const db = DbFactory.create(process.env.DB)
+    db.init(process.env.DB_URI)
 
     const app = AppFactory.create()
     

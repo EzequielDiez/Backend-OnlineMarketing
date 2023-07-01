@@ -1,13 +1,13 @@
-import CartMongooseDao from "../../data/daos/cartMongooseDaos.js";
+import container from "../../container.js";
 
 class CartManager {
   constructor() {
-    this.dao = new CartMongooseDao;
+    this.cartRepository = container.resolve('CartRepository');
   }
 
   async create(data) {
     try {
-      return await this.dao.create(data);
+      return await this.cartRepository.create(data);
     } catch (error) {
       throw error;
     }
@@ -15,7 +15,7 @@ class CartManager {
 
   async getAll() {
     try {
-      return await this.dao.getAll();
+      return await this.cartRepository.getAll();
     } catch (error) {
       throw error;
     }
@@ -23,7 +23,7 @@ class CartManager {
 
   async getOne(id) {
     try {
-      return await this.dao.getOne(id)
+      return await this.cartRepository.getOne(id)
     } catch (error) {
       throw error
     }
@@ -31,7 +31,7 @@ class CartManager {
 
   async update(id, body) {
     try {
-      return await this.dao.update(id, body)
+      return await this.cartRepository.update(id, body)
     } catch (error) {
       throw error
     }
@@ -39,10 +39,10 @@ class CartManager {
 
   async deleteCart(cartId) {
     try {
-      await this.dao.getOne(cartId)
+      await this.cartRepository.getOne(cartId)
 
-      const { id } = await this.dao.getOne(cartId)
-      return this.dao.deleteCart(cartId, { _id: id, products: []})
+      const { id } = await this.cartRepository.getOne(cartId)
+      return this.cartRepository.deleteCart(cartId, { _id: id, products: []})
     } catch (error) {
       throw error
     }

@@ -1,24 +1,29 @@
 import cartSchema from "../models/cartSchema.js";
 import userSchema from "../models/userSchema.js";
+import User from "../../domain/entities/user.js";
 
-class UserMongooseDao
+class UserMongooseRepository
 {
     async paginate(criteria){
         try {
             const { limit, page } = criteria;
             const userDocuments = await userSchema.paginate({}, { limit, page });
+            const { docs, ...pagination } = userDocuments
 
-            userDocuments.docs = userDocuments.docs.map(document => ({
-            id: document._id,
-            firstName: document.firstName,
-            lastName: document.lastName,
-            email: document.email,
-            age: document.age,
-            cart: document.cart,
-            role: document.role,
-            }));
+            const users = docs.map(document => new User ({
+                id: document._id,
+                firstName: document.firstName,
+                lastName: document.lastName,
+                email: document.email,
+                age: document.age,
+                cart: document.cart,
+                role: document.role,
+            }))
 
-            return userDocuments;
+            return {
+                users,
+                pagination
+            }
 
         } catch (error) {
             console.error(error)
@@ -32,7 +37,7 @@ class UserMongooseDao
 
             if(!userDocument) return null
 
-            return {
+            return new User ({
                 id: userDocument?._id,
                 firstName: userDocument?.firstName,
                 lastName: userDocument?.lastName,
@@ -40,7 +45,8 @@ class UserMongooseDao
                 age: userDocument?.age,
                 cart: userDocument?.cart,
                 role: userDocument?.role,              
-            }
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -53,7 +59,7 @@ class UserMongooseDao
 
             if(!userDocument) return null
 
-            return {
+            return new User ({
                 id: userDocument?._id,
                 firstName: userDocument?.firstName,
                 lastName: userDocument?.lastName,
@@ -61,7 +67,9 @@ class UserMongooseDao
                 age: userDocument?.age,
                 cart: userDocument?.cart,
                 role: userDocument.role,
-            }
+                password: userDocument.password
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -77,7 +85,7 @@ class UserMongooseDao
             userDocument.cart = cartDocument._id
             await userDocument.save()
 
-            return {
+            return new User ({
                 id: userDocument._id,
                 firstName: userDocument.firstName,
                 lastName: userDocument.lastName,
@@ -86,7 +94,8 @@ class UserMongooseDao
                 cart: userDocument.cart,
                 role: userDocument.role,
                 password: userDocument.password,
-            }
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -99,7 +108,7 @@ class UserMongooseDao
 
             if(!userDocument) return null
 
-            return {
+            return new User ({
                 id: userDocument._id,
                 firstName: userDocument.firstName,
                 lastName: userDocument.lastName,
@@ -107,7 +116,8 @@ class UserMongooseDao
                 age: userDocument.age,
                 cart: userDocument.cart,
                 role: userDocument.role,
-            }
+            })
+            
         } catch (error) {
             console.error(error);
             throw error
@@ -124,4 +134,4 @@ class UserMongooseDao
     }
 }
 
-export default UserMongooseDao;
+export default UserMongooseRepository;

@@ -1,6 +1,7 @@
 import productSchema from "../models/productSchema.js"
+import Product from "../../domain/entities/product.js";
 
-class ProductMongooseDao
+class ProductMongooseRepository
 {
     async getAll(limit) { 
         try {
@@ -109,4 +110,4 @@ class ProductMongooseDao
     }
 }
 
-export default ProductMongooseDao
+export default ProductMongooseRepository

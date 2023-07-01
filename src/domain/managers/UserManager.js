@@ -1,14 +1,14 @@
-import UserMongooseDao from "../../data/daos/userMongooseDao.js";
+import container from "../../container.js";
 
 class UserManager {
 
     constructor() {
-        this.userDao = new UserMongooseDao();
+        this.userRepository = container.resolve('UserRepository');
     }
 
     async paginate(criteria) {
         try {
-            return this.userDao.paginate(criteria);
+            return this.userRepository.paginate(criteria);
         } catch (error) {
             throw error
         }    
@@ -16,7 +16,7 @@ class UserManager {
 
     async getOneByEmail(email) {
         try {
-            return this.userDao.getOneByEmail(email);        
+            return this.userRepository.getOneByEmail(email);        
         } catch (error) {
             throw error
         }
@@ -24,7 +24,7 @@ class UserManager {
   
     async getOne(id) {
         try {
-            return this.userDao.getOne(id);    
+            return this.userRepository.getOne(id);    
         } catch (error) {
             throw error
         }
@@ -32,7 +32,7 @@ class UserManager {
 
     async create(data) {
         try {
-            const user = await this.userDao.create(data);
+            const user = await this.userRepository.create(data);
 
             return { ...user, password: undefined };    
         } catch (error) {
@@ -42,7 +42,7 @@ class UserManager {
 
     async updateOne(id, data) {
         try {
-            return this.userDao.updateOne(id, data);    
+            return this.userRepository.updateOne(id, data);    
         } catch (error) {
             throw error
         }
@@ -50,7 +50,7 @@ class UserManager {
 
     async deleteOne(id) {
         try {
-            return this.userDao.deleteOne(id);    
+            return this.userRepository.deleteOne(id);    
         } catch (error) {
             throw error
         }

@@ -1,6 +1,7 @@
 import cartSchema from '../models/cartSchema.js';
+import Product from '../../domain/entities/product.js';
 
-class CartMongooseDao 
+class CartMongooseRepository 
 {
   async create(data) {
     try {
@@ -135,4 +136,4 @@ class CartMongooseDao
 
 }
 
-export default CartMongooseDao;
+export default CartMongooseRepository;
