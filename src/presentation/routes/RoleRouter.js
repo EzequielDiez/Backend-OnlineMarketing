@@ -5,10 +5,12 @@ import authorization from "../middlewares/authorization.js";
 
 const roleRouter = Router();
 
-roleRouter.get('/', auth, authorization('getRoles'), list);
-roleRouter.get('/:id', auth, authorization('getRole'), getOne);
-roleRouter.post('/', auth, authorization('saveRole'), save);
-roleRouter.put('/:id', auth, authorization('updateRole'), update);
-roleRouter.delete('/:id', auth, authorization('deleteRole'), deleteOne);
+roleRouter.use(auth)
+
+roleRouter.get('/', authorization('getRoles'), list);
+roleRouter.get('/:id', authorization('getRole'), getOne);
+roleRouter.post('/', authorization('saveRole'), save);
+roleRouter.put('/:id', authorization('updateRole'), update);
+roleRouter.delete('/:id', authorization('deleteRole'), deleteOne);
 
 export default roleRouter;

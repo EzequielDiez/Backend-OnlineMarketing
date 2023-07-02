@@ -1,5 +1,6 @@
 import cartSchema from '../models/cartSchema.js';
 import Product from '../../domain/entities/product.js';
+import Cart from '../../domain/entities/cart.js';
 
 class CartMongooseRepository 
 {
@@ -7,7 +8,7 @@ class CartMongooseRepository
     try {
       const cartDocument = await cartSchema.create(data);
 
-      return{
+      return new Cart ({
         id: cartDocument._id,
         products: cartDocument.products.map(product => ({
           _id: product._id,
@@ -21,18 +22,21 @@ class CartMongooseRepository
           thumbnails: product.thumbnails,
           quantity: product.quantity
         }))
-      }
+      })
+
     } catch (error) {
       console.log('Error in addCart:', error);
       throw error;
     }
   }
 
-  async getAll() {
+  async paginate(criteria) {
     try {
-      const cartsDocument = await cartSchema.find()
+      const { limit, page } = criteria
+      const cartDocuments = await cartSchema.paginate({}, {limit, page })
+      const { docs, ...pagination } = cartDocuments
 
-      return cartsDocument.map(document => ({
+      const carts = docs.map(document => new Cart ({
         id: document._id,
         products: document.products.map(product => ({
           _id: product._id,
@@ -47,6 +51,12 @@ class CartMongooseRepository
           quantity: product.quantity
         }))
       }))
+
+      return {
+        carts,
+        pagination
+      }
+
     } catch (error) {
       console.log('Error in getCarts:', error);
       throw error;
@@ -55,10 +65,10 @@ class CartMongooseRepository
 
   async getOne(id) {
     try {
-      const cartDocument = await cartSchema.findById(id)/* .populate(['products._id']) */
+      const cartDocument = await cartSchema.findById(id)
       if (!cartDocument) return null
 
-      return{
+      return new Cart ({
         id: cartDocument._id,
         products: cartDocument.products.map(product => ({
           _id: product._id,
@@ -72,7 +82,7 @@ class CartMongooseRepository
           thumbnails: product.thumbnails,
           quantity: product.quantity
         }))
-      }
+      })
 
     } catch (error) {
       console.log('Error in getCartsById:', error);
@@ -82,9 +92,9 @@ class CartMongooseRepository
 
   async update(id, body) {
     try {
-      const cartDocument = await cartSchema.findByIdAndUpdate(id, body, { new: true })/* .populate(['products._id']) */
+      const cartDocument = await cartSchema.findByIdAndUpdate(id, body, { new: true })
 
-      return{
+      return new Cart ({
         id: cartDocument.id,
         products: cartDocument.products.map(product => ({
           _id: product._id,
@@ -98,7 +108,8 @@ class CartMongooseRepository
           thumbnails: product.thumbnails,
           quantity: product.quantity
         }))
-      }
+      })
+
     } catch (error) {
       console.log('Error in updateCart:', error);
       throw error
@@ -120,7 +131,7 @@ class CartMongooseRepository
   async deleteProductFromCart(cid, newProducts) {
     try {
         const cartDocument = await cartSchema.findByIdAndUpdate({ _id: cid }, newProducts, { new: true });
-        return {
+        return new Cart ({
             _id: cartDocument._id,
             products: cartDocument.products.map(item => {
                 return {
@@ -128,7 +139,8 @@ class CartMongooseRepository
                     quantity: item.quantity
                 }
             })
-        };
+        })
+        
     } catch (error) {
         throw error;
     }

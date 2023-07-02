@@ -6,9 +6,9 @@ class ProductManager {
     this.productRepository = container.resolve('ProductRepository')
   }
 
-  async getAll(limit, sort) {
+  async paginate(limit, sort) {
     try {
-        let products = await this.productRepository.getAll(limit);
+        let products = await this.productRepository.paginate(limit);
         if (sort === 'asc') {
           products = products.sort((a, b) => a.price - b.price)
         } else if (sort === 'desc') {

@@ -5,7 +5,7 @@ export const getProducts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10
     const sort = req.query.sort
     const manager = new ProductManager()
-    const products = await manager.getAll(limit, sort);
+    const products = await manager.paginate(limit, sort);
     res.send({ status: 'success', products });
 };
 

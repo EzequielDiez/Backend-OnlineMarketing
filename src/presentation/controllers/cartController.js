@@ -2,8 +2,9 @@ import CartManager from "../../domain/managers/CartManager.js";
 
   export const getCarts = async (req, res) => {
     try {
+      const limit = parseInt(req.query.limit) || 10
       const manager = new CartManager();
-      const carts = await manager.getAll();
+      const carts = await manager.paginate(limit);
       res.send({ status: 'success', carts });
     } catch (error) {
       res.status(500).send('Error Server');

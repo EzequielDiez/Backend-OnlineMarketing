@@ -10,7 +10,7 @@ void (async() =>
     db.init(process.env.DB_URI)
 
     const app = AppFactory.create()
-    
+
     app.init()
     app.build()
     app.listen()

@@ -13,9 +13,9 @@ class CartManager {
     }
   }
 
-  async getAll() {
+  async paginate(limit) {
     try {
-      return await this.cartRepository.getAll();
+      return await this.cartRepository.paginate(limit);
     } catch (error) {
       throw error;
     }

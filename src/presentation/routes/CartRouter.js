@@ -5,12 +5,14 @@ import authorization from "../middlewares/authorization.js";
 
 const CartRouter = Router();
 
-  CartRouter.get('/', auth, authorization('getAllCarts'), getCarts);
-  CartRouter.post('/', auth, authorization('getOneCart'), addCart);
-  CartRouter.get('/:cid', auth, authorization('getOneCartById'), getCartById);
-  CartRouter.post('/:cid/product/:pid', auth, authorization('updateOneCart'), updateCart);
-  CartRouter.delete('/:cid', auth, authorization('deleteOneCart'), deleteCart)
-  CartRouter.delete('/:cid/product/:pid', auth, authorization('deleteProductOneCart'), deleteProductFromCart);
-  CartRouter.put('/:cid/product/:pid', auth, authorization('updateQuantityOneCart'), updateQuantityOnCart)
+CartRouter.use(auth)
+
+CartRouter.get('/', authorization('getAllCarts'), getCarts);
+CartRouter.post('/', authorization('getOneCart'), addCart);
+CartRouter.get('/:cid', authorization('getOneCartById'), getCartById);
+CartRouter.post('/:cid/product/:pid', authorization('updateOneCart'), updateCart);
+CartRouter.delete('/:cid', authorization('deleteOneCart'), deleteCart)
+CartRouter.delete('/:cid/product/:pid', authorization('deleteProductOneCart'), deleteProductFromCart);
+CartRouter.put('/:cid/product/:pid', authorization('updateQuantityOneCart'), updateQuantityOnCart)
   
 export default CartRouter

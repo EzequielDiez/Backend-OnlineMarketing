@@ -3,11 +3,13 @@ import Product from "../../domain/entities/product.js";
 
 class ProductMongooseRepository
 {
-    async getAll(limit) { 
+    async paginate(criteria) { 
         try {
-            const productsDocument = await productSchema.find({ status: true }).limit(limit)
+            const { limit, page } = criteria
+            const productDocuments = await productSchema.paginate({ status: true },{ limit, page })
+            const { docs, ...pagination } = productDocuments
 
-            return productsDocument.map(document => ({
+            const products = docs.map(document => new Product ({
                 id: document._id,
                 title: document.title,
                 description: document.description,
@@ -18,6 +20,12 @@ class ProductMongooseRepository
                 category: document.category,
                 thumbnails: document.thumbnails,
             }))
+
+            return {
+                products,
+                pagination
+            }
+
         } catch (error) {
             console.error(error);
             throw error
@@ -29,7 +37,7 @@ class ProductMongooseRepository
             const productDocument = await productSchema.findById(id).where({ status: true })
             if (!productDocument) return null
 
-            return{
+            return new Product ({
                 id: productDocument._id,
                 title: productDocument.title,
                 description: productDocument.description,
@@ -39,7 +47,8 @@ class ProductMongooseRepository
                 stock: productDocument.stock,
                 category: productDocument.category,
                 thumbnails: productDocument.thumbnails,
-            }
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -50,7 +59,7 @@ class ProductMongooseRepository
         try {
             const productDocument = await productSchema.create(data)
 
-            return{
+            return new Product ({
                 id: productDocument._id,
                 title: productDocument.title,
                 description: productDocument.description,
@@ -60,7 +69,8 @@ class ProductMongooseRepository
                 stock: productDocument.stock,
                 category: productDocument.category,
                 thumbnails: productDocument.thumbnails,
-            }
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -71,7 +81,7 @@ class ProductMongooseRepository
         try {
             const productDocument = await productSchema.findByIdAndUpdate(id, body, { new: true })
 
-            return{
+            return new Product ({
                 id: productDocument._id,
                 title: productDocument.title,
                 description: productDocument.description,
@@ -81,7 +91,8 @@ class ProductMongooseRepository
                 stock: productDocument.stock,
                 category: productDocument.category,
                 thumbnails: productDocument.thumbnails,
-            }
+            })
+
         } catch (error) {
             console.error(error);
             throw error
@@ -92,7 +103,7 @@ class ProductMongooseRepository
         try {
             const productDocument = await productSchema.findByIdAndUpdate(id, { status: false }, { new: true })
 
-            return{
+            return new Product ({
                 id: productDocument._id,
                 title: productDocument.title,
                 description: productDocument.description,
@@ -102,7 +113,8 @@ class ProductMongooseRepository
                 stock: productDocument.stock,
                 category: productDocument.category,
                 thumbnails: productDocument.thumbnails,
-            }
+            })
+            
         } catch (error) {
             console.error(error);
             throw error
