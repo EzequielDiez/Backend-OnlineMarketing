@@ -15,7 +15,7 @@ export const generateToken = async (user) =>
 {
     return new Promise((resolve, reject) =>
     {
-      const token = jwt.sign({ user: { ...user, password: undefined } }, process.env.PRIVATE_KEY, { expiresIn: '1m' });
+      const token = jwt.sign({ user: { ...user, password: undefined } }, process.env.PRIVATE_KEY, { expiresIn: '10m' });
       resolve(token);
     });
 }

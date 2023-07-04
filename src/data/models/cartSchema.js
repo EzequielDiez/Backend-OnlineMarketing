@@ -16,7 +16,7 @@ const cartSchema = new Schema({
 cartSchema.plugin(paginate)
 
 /* cartSchema.pre('find', function() {
-    this.populate(['products'])
-})
- */
+    this.populate(['product'])
+}) */
+
 export default mongoose.model(cartCollection, cartSchema)

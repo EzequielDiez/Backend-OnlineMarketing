@@ -32,26 +32,55 @@ import CartManager from "../../domain/managers/CartManager.js";
     }
   };
   
+  export const checkout = async (req, res, next) => {
+    try {
+      const { cid } = req.params;
+      const { email } = req.user;
+      console.log("CID:", cid);
+      console.log("Email:", email);
+      const manager = new CartManager();
+      console.log("Creating checkout...");
+      const result = await manager.createCheckout({ id: cid, user: email });
+      console.log("Checkout created:", result);
+      res.status(200).send({ status: "success", data: result });
+    } catch (error) {
+      console.log("Error:", error);
+      res.status(500).send("Error Server");
+    }
+  };
 
   export const updateCart = async (req, res) => {
     try {
       const { cid, pid } = req.params;
+      console.log('cid:', cid);
+      console.log('pid:', pid);
+  
       const manager = new CartManager();
+      console.log('Creating CartManager instance:', manager);
+  
       const cart = await manager.getOne(cid);
+      console.log('Retrieved cart:', cart);
+  
       const quantity = 1;
+      console.log('quantity:', quantity);
   
       const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
+      console.log('productIndex:', productIndex);
   
       if (productIndex === -1) {
-        cart.products.push({ _id: pid , quantity})
+        cart.products.push({ _id: pid , quantity});
       } else {
         cart.products[productIndex].quantity += quantity;
       }
   
+      console.log('Updated cart:', cart);
+  
       await manager.update(cid, cart);
+      console.log('Cart updated in database.');
   
       res.send({ status: 'success', cart });
     } catch (error) {
+      console.error('Error:', error);
       res.status(500).send('Error Server');
     }
   };
