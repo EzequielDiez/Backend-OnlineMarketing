@@ -29,6 +29,16 @@ class AppExpress
         this.app.use(errorHandler)
     }
 
+    callback()
+    {
+        return this.app
+    }
+
+    close()
+    {
+        this.server.close()
+    }
+
     listen()
     {
         return this.app.listen(8080, () => {

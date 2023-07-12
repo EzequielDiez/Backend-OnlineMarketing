@@ -15,7 +15,7 @@ export const login = async  (req, res, next) =>
     res.cookie('accessToken', accessToken, {
         maxAge: 60*60*1000,
         httpOnly: true
-    }).send({ message: 'Login success!', accessToken })
+    }).send({ message: "You have successfully logged in", accessToken })
   }
   catch (e)
   {
@@ -42,7 +42,7 @@ export const signup = async (req, res, next) =>
     const manager = new SessionManager();
     const user = await manager.signup(req.body);
 
-    res.status(201).send({ status: 'success', user, message: 'User created.' });
+    res.status(201).send({ status: 'success', user, message: "You have successfully registered" });
   }
   catch (e)
   {
