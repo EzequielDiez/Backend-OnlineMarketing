@@ -34,16 +34,23 @@ class AppExpress
         return this.app
     }
 
-    close()
-    {
-        this.server.close()
-    }
-
     listen()
     {
         return this.app.listen(8080, () => {
             console.log('Server started on port 8080');
         });
+    }
+
+/*     listen()
+    {
+        this.server = this.app.listen(8080, () => {
+            console.log('Server started on port 8080')
+        })
+    } */
+
+    close()
+    {
+        this.server.close()
     }
 }
 

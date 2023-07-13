@@ -73,8 +73,6 @@ describe ("Testing Session Endpoints", () =>
 
             const { body: getCurrentBody } = getCurrentResult
 
-            console.log("getCurrentBody", getCurrentBody);
-
             expect (getCurrentBody.payload.email.toLowerCase()).toBe(userPayload.email.toLowerCase())
             expect (getCurrentBody.payload.firstName).toBe(userPayload.firstName)
             expect (getCurrentBody.payload.lastName).toBe(userPayload.lastName)

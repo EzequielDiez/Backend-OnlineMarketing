@@ -7,7 +7,7 @@ const ProductRouter = Router();
 
 ProductRouter.use(auth)
 
-    ProductRouter.get('/', authorization('getAllProducts'), getProducts);
+    ProductRouter.get('/', auth,/* authorization('getAllProducts'), */ getProducts);
     ProductRouter.get('/:pid', authorization('getOneProduct'), getProductById);
     ProductRouter.post('/', authorization('addOneProduct'), addProduct);
     ProductRouter.put('/:pid', authorization('updateOneProduct'), updateProduct);
