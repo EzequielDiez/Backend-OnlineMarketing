@@ -1,35 +1,34 @@
 import productSchema from "../models/productSchema.js"
 import Product from "../../domain/entities/product.js";
 
-class ProductMongooseRepository
-{
-    async paginate(criteria) { 
-        try {
-            const { limit, page } = criteria
-            const productDocuments = await productSchema.paginate({ status: true },{ limit, page })
-            const { docs, ...pagination } = productDocuments
-
-            const products = docs.map(document => new Product ({
-                id: document._id,
-                title: document.title,
-                description: document.description,
-                code: document.code,
-                price: document.price,
-                status: document.status,
-                stock: document.stock,
-                category: document.category,
-                thumbnails: document.thumbnails,
-            }))
-
-            return {
-                products,
-                pagination
-            }
-
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+class ProductMongooseRepository {
+    async paginate(criteria) {
+      try {
+        const { limit, page } = criteria;  
+        const productDocuments = await productSchema.paginate({ status: true }, { limit, page });  
+        const { docs, ...pagination } = productDocuments;
+  
+        const products = docs.map((document) => {
+          return new Product({
+            id: document._id,
+            title: document.title,
+            description: document.description,
+            code: document.code,
+            price: document.price,
+            status: document.status,
+            stock: document.stock,
+            category: document.category,
+            thumbnails: document.thumbnails,
+          });
+        });
+  
+        return {
+          products,
+          pagination,
+        };
+      } catch (error) {
+        throw error;
+      }
     }
 
     async getOne(id) {

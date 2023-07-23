@@ -2,23 +2,18 @@ import container from "../../container.js";
 
 class ProductManager {
 
-  constructor() {
-    this.productRepository = container.resolve('ProductRepository')
-  }
-
-  async paginate(limit, sort) {
-    try {
-        let products = await this.productRepository.paginate(limit);
-        if (sort === 'asc') {
-          products = products.sort((a, b) => a.price - b.price)
-        } else if (sort === 'desc') {
-          products = products.sort((a, b) => b.price - a.price)
-        }
-        return products
-    } catch (error) {
-        throw error;
+    constructor() {
+      this.productRepository = container.resolve('ProductRepository');
     }
-  };
+  
+    async paginate(criteria) {
+      try {
+        let products = await this.productRepository.paginate(criteria);
+        return products;
+      } catch (error) {
+        throw error;
+      }
+    };
 
   async getOne(id) {
       try {

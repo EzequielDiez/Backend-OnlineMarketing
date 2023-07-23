@@ -1,12 +1,22 @@
 import ProductManager from "../../domain/managers/ProductManager.js";
 
+
 export const getProducts = async (req, res) => {
-        
-    const limit = parseInt(req.query.limit) || 10
-    const sort = req.query.sort
-    const manager = new ProductManager()
-    const products = await manager.paginate(limit, sort);
-    res.send({ status: 'success', products });
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const manager = new ProductManager();
+  
+  try {
+    const criteria = {
+      limit,
+      page
+    };
+
+    const paginatedProducts = await manager.paginate(criteria);
+    res.send({ status: 'success', ...paginatedProducts });
+  } catch (error) {
+    res.status(500).send({ status: 'error', message: 'Internal Server Error' });
+  }
 };
 
 export const getProductById = async (req, res) => {
@@ -39,7 +49,7 @@ export const addProduct = async (req, res) => {
       
       const manager = new ProductManager()
       const productId = await manager.create(newProduct);
-      res.send({ status: 'success', productId, message: 'Product created.' })
+      res.status(201).json({ status: 'success', productId, message: 'Product created.' })
     } catch (error) {
       console.log('Error in POST /api/products:', error);
       res.status(500).json({ message: 'Ocurrió un error al agregar el producto.' });
@@ -60,7 +70,7 @@ export const updateProduct = async (req, res) => {
       const success = await manager.update(id, update);
   
       if (success) {
-        res.send({ status: 'success', success, message: 'Product updated.' })
+        res.status(200).json({ status: 'success', success, message: 'Product updated.' })
       } else {
         res.status(404).json({ message: 'Producto no encontrado.' });
       }
