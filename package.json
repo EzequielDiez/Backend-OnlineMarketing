@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js  src/tests/sessionIntegrate.test.js src/tests/productIntegrate.test.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js  src/tests/sessionIntegrate.test.js src/tests/productIntegrate.test.js src/tests/cartIntegrate.test.js",
     "start": "node src/app.js",
     "dev": "nodemon"
   },

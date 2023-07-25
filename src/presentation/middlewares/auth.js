@@ -6,7 +6,7 @@ const auth = (req, res, next) =>
 
     if (!authHeader)
     {
-        return res.status(401).send({ message: 'Empty authentication header!'});
+        return res.status(401).send({ message: 'Missing or invalid token.'});
     }
 
     const token = authHeader.split(' ')[1]; // Bearer tokenString

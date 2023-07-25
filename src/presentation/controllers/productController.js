@@ -20,11 +20,19 @@ export const getProducts = async (req, res) => {
 };
 
 export const getProductById = async (req, res) => {
-    
+  try {
     const productId = req.params.pid;
-    const manager = new ProductManager()
+    const manager = new ProductManager();
     const product = await manager.getOne(productId);
-    res.send({ status: 'success', product });
+
+    if (product) {
+      res.status(200).json({ status: 'success', product, message: 'Product found.' });
+    } else {
+      res.status(404).json({ message: 'Product not found.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error Server' });
+  }
 };
 
 export const addProduct = async (req, res) => {
@@ -33,7 +41,7 @@ export const addProduct = async (req, res) => {
       const { title, description, code, price, status, stock, category, thumbnails } = req.body;
   
       if (!title || !description || !code || !price || !status || !stock || !category || !thumbnails) {
-        return res.status(400).json({ message: 'Faltan campos obligatorios.' });
+        return res.status(400).json({ message: 'Missing required fields.' });
       }
   
       const newProduct = {

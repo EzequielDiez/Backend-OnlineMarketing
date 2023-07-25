@@ -119,5 +119,57 @@ describe("Testing Products Endpoints", () => {
 
     describe("Testing Products Endpoints Fails", () => {
 
-    })
+        test("Create product with missing required fields /api/products/", async () => {
+            const data = { };
+
+            const response = await requester
+                .post("/api/products/")
+                .set("Authorization", `Bearer ${jwt}`)
+                .send(data)
+                .expect(400);
+            const { body } = response;
+            expect(body.message).toBe("Missing required fields.");
+        });
+
+        test("Create product without authorization token /api/products/", async () => {
+            const data = {
+                title: faker.commerce.productName(),
+                description: faker.commerce.productDescription(),
+                code: faker.string.numeric(10),
+                price:  faker.commerce.price({ min: 1000, max: 10000}),
+                status: true,
+                stock: faker.number.int({min: 5, max: 50}),
+                category: faker.commerce.productMaterial(),
+                thumbnails: faker.commerce.product()
+            };
+
+            const response = await requester
+                .post("/api/products/")
+                .send(data)
+                .expect(401);
+            const { body } = response;
+            expect(body.message).toBe("Missing or invalid token.");
+        });
+
+        test("Update product without authorization token /api/products/:pid", async () => {
+            const data = {
+                title: faker.commerce.productName(),
+            };
+
+            const response = await requester
+                .put(`/api/products/${product.id}`)
+                .send(data)
+                .expect(401);
+            const { body } = response;
+            expect(body.message).toBe("Missing or invalid token.");
+        });
+
+        test("Delete product without authorization token /api/products/:pid", async () => {
+            const response = await requester
+                .delete(`/api/products/${product.id}`)
+                .expect(401);
+            const { body } = response;
+            expect(body.message).toBe("Missing or invalid token.");
+        });
+    });
 });

@@ -15,7 +15,7 @@ import CartManager from "../../domain/managers/CartManager.js";
     try {
       const manager = new CartManager();
       const newCart = await manager.create();
-      res.send({ status: 'success', newCart });
+      res.status(201).send({ status: 'success', newCart, message: "Cart has been created successfully" });
     } catch (error) {
       res.status(500).send('Error Server');
     }
@@ -51,36 +51,22 @@ import CartManager from "../../domain/managers/CartManager.js";
 
   export const updateCart = async (req, res) => {
     try {
-      const { cid, pid } = req.params;
-      console.log('cid:', cid);
-      console.log('pid:', pid);
-  
+      const { cid, pid } = req.params;  
       const manager = new CartManager();
-      console.log('Creating CartManager instance:', manager);
-  
       const cart = await manager.getOne(cid);
-      console.log('Retrieved cart:', cart);
-  
       const quantity = 1;
-      console.log('quantity:', quantity);
-  
       const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
-      console.log('productIndex:', productIndex);
   
       if (productIndex === -1) {
         cart.products.push({ _id: pid , quantity});
       } else {
         cart.products[productIndex].quantity += quantity;
       }
-  
-      console.log('Updated cart:', cart);
-  
+    
       await manager.update(cid, cart);
-      console.log('Cart updated in database.');
   
-      res.send({ status: 'success', cart });
+      res.status(200).send({ status: 'success', cart, message: "Product has been added to the cart successfully" });
     } catch (error) {
-      console.error('Error:', error);
       res.status(500).send('Error Server');
     }
   };
@@ -98,7 +84,7 @@ import CartManager from "../../domain/managers/CartManager.js";
       if (productIndex !== -1) {
         cart.products[productIndex].quantity = quantity;
         const updatedCart = await manager.update(cid, cart);
-        res.send({ status: 'success', cart: updatedCart });
+        res.status(200).send({ status: 'success', cart: updatedCart, message: "Product inside the cart has been updated successfully" });
       } else {
         res.status(404).send('Product not found in cart');
       }
@@ -112,7 +98,7 @@ import CartManager from "../../domain/managers/CartManager.js";
       const { cid } = req.params;
       const manager = new CartManager();
       const result = await manager.deleteCart(cid)
-      res.send({ status: 'success', result})
+      res.status(200).send({ status: 'success', result, message: "Cart has been deleted successfully"})
     } catch (error) {
       res.status(500).send('Error Server')
     }
@@ -130,7 +116,7 @@ import CartManager from "../../domain/managers/CartManager.js";
       if (productIndex !== -1) {
         cart.products.splice(productIndex, 1);
         const updatedCart = await manager.update(cid, cart);
-        res.send({ status: 'success', cart: updatedCart });
+        res.status(200).send({ status: 'success', cart: updatedCart, message: "Product inside the cart has been deleted successfully" });
       } else {
         res.status(404).send('Product not found in cart');
       }

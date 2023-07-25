@@ -57,6 +57,7 @@ class ProductMongooseRepository {
     async create(data) {
         try {
             const productDocument = await productSchema.create(data)
+            if (!productDocument) return null
 
             return new Product ({
                 id: productDocument._id,
@@ -79,6 +80,7 @@ class ProductMongooseRepository {
     async update(id, body) {
         try {
             const productDocument = await productSchema.findByIdAndUpdate(id, body, { new: true })
+            if (!productDocument) return null
 
             return new Product ({
                 id: productDocument._id,
@@ -101,6 +103,7 @@ class ProductMongooseRepository {
     async delete(id) {
         try {
             const productDocument = await productSchema.findByIdAndUpdate(id, { status: false }, { new: true })
+            if (!productDocument) return null
 
             return new Product ({
                 id: productDocument._id,
