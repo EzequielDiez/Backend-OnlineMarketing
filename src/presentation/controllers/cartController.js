@@ -36,10 +36,7 @@ import CartManager from "../../domain/managers/CartManager.js";
     try {
       const { cid } = req.params;
       const { email } = req.user;
-      console.log("CID:", cid);
-      console.log("Email:", email);
       const manager = new CartManager();
-      console.log("Creating checkout...");
       const result = await manager.createCheckout({ id: cid, user: email });
       console.log("Checkout created:", result);
       res.status(200).send({ status: "success", data: result });

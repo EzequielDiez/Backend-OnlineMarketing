@@ -59,11 +59,8 @@ class CartManager {
   } */
 
   async createCheckout(data) {
-    console.log('Entering createCheckout function');
     
-    const { id, user } = data;
-    console.log('Data:', data);
-    
+    const { id, user } = data;    
     const cart = await this.cartRepository.getOne(id);
     console.log('Cart:', cart);
     

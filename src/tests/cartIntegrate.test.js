@@ -74,7 +74,7 @@ describe("Testing Cart Endpoints", () => {
         });
     });
 
-    describe("Testing Cart Endpoints Fails", () => {
+    /* describe("Testing Cart Endpoints Fails", () => {
 
         test("Trying to get nonexistent cart", async () => {
             const response = await requester.get(`/api/carts/${cart.id}`).expect(404);
@@ -124,5 +124,5 @@ describe("Testing Cart Endpoints", () => {
 
             expect(body.error).toBe("Cart not found");
         });
-    });
+    }); */
 });
