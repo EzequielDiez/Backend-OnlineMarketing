@@ -1,11 +1,15 @@
 import CartManager from "../../domain/managers/CartManager.js";
 
   export const getCarts = async (req, res) => {
+    const limit = parseInt(req.query.limit) || 10
+    const page = parseInt(req.query.page) || 1
+    const manager = new CartManager();
+
     try {
-      const limit = parseInt(req.query.limit) || 10
-      const manager = new CartManager();
-      const carts = await manager.paginate(limit);
-      res.send({ status: 'success', carts });
+      const criteria = {limit, page}
+
+      const carts = await manager.paginate(criteria);
+      res.send({ status: 'success', ...carts });
     } catch (error) {
       res.status(500).send('Error Server');
     }

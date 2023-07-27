@@ -11,7 +11,7 @@ class CartMongooseRepository
       return new Cart ({
         id: cartDocument._id,
         products: cartDocument.products.map(product => ({
-          _id: product._id,
+          product: product._id,
           title: product.title,
           description: product.description,
           code: product.code,
@@ -36,10 +36,11 @@ class CartMongooseRepository
       const cartDocuments = await cartSchema.paginate({}, {limit, page })
       const { docs, ...pagination } = cartDocuments
 
-      const carts = docs.map(document => new Cart ({
+      const carts = docs.map((document) => {  
+      return new Cart ({
         id: document._id,
-        products: document.products.map(product => ({
-          _id: product._id,
+        products: document.products.map(product => new Product ({
+          product: product._id,
           title: product.title,
           description: product.description,
           code: product.code,
@@ -50,7 +51,7 @@ class CartMongooseRepository
           thumbnails: product.thumbnails,
           quantity: product.quantity
         }))
-      }))
+      })})
 
       return {
         carts,
@@ -65,13 +66,19 @@ class CartMongooseRepository
 
   async getOne(id) {
     try {
-      const cartDocument = await cartSchema.findById(id)
-      if (!cartDocument) return null
-
-      return new Cart ({
+      console.log('Fetching cart by ID:', id);
+      const cartDocument = await cartSchema.findById(id);
+      console.log('Fetched cartDocument:', cartDocument);
+  
+      if (!cartDocument) {
+        console.log('Cart not found');
+        return null;
+      }
+  
+      const cart = new Cart({
         id: cartDocument._id,
         products: cartDocument.products.map(product => ({
-          _id: product._id,
+          product: product._id,
           title: product.title,
           description: product.description,
           code: product.code,
@@ -82,11 +89,13 @@ class CartMongooseRepository
           thumbnails: product.thumbnails,
           quantity: product.quantity
         }))
-      })
-
+      });
+  
+      console.log('Constructed cart:', cart);
+      return cart;
     } catch (error) {
       console.log('Error in getCartsById:', error);
-      throw error
+      throw error;
     }
   }
 
@@ -97,7 +106,7 @@ class CartMongooseRepository
       return new Cart ({
         id: cartDocument.id,
         products: cartDocument.products.map(product => ({
-          _id: product._id,
+          product: product._id,
           title: product.title,
           description: product.description,
           code: product.code,
@@ -135,7 +144,7 @@ class CartMongooseRepository
             _id: cartDocument._id,
             products: cartDocument.products.map(item => {
                 return {
-                    _id: item._id,
+                    product: item._id,
                     quantity: item.quantity
                 }
             })
