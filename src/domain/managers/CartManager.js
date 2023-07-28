@@ -31,33 +31,6 @@ class CartManager {
     }
   }
 
-/*   async createCheckout(data)
-  {
-    const { id, user } = data
-    const cart = await this.cartRepository.getOne(id)
-    let total = 0
-
-    for (const productInCart of cart.products) 
-    {
-      const newStock = productInCart.product.stock - productInCart.quantity
-
-      if ( newStock < 0 ) throw new Error(`The product ${productInCart.product.title} - ${productInCart.product.code} doesn't have stock`)
-      
-      total += productInCart.product.price * productInCart.quantity
-
-      await this.productRepository.update(productInCart.product.id, { stock: newStock, status: newStock > 0 ? true : false})
-    }
-
-    const code = nanoid(15)
-
-    return await this.ticketRepository.save({
-      code,
-      date: new Date(),
-      total,
-      user
-    })
-  } */
-
   async createCheckout(data) {
     
     const { id, user } = data;    
@@ -101,6 +74,8 @@ class CartManager {
     
     return ticket;
   }
+
+  
 
   async update(id, body) {
     try {

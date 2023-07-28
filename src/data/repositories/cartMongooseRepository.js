@@ -65,42 +65,7 @@ class CartMongooseRepository
     }
   }
 
-/*   async getOne(id) {
-    try {
-      console.log('Fetching cart by ID:', id);
-      const cartDocument = await cartSchema.findById(id);
-      console.log('Fetched cartDocument:', cartDocument);
-  
-      if (!cartDocument) {
-        console.log('Cart not found');
-        return null;
-      }
-  
-      const cart = new Cart({
-        id: cartDocument._id,
-        products: cartDocument.products.map(product => ({
-          product: product._id,
-          title: product.title,
-          description: product.description,
-          code: product.code,
-          price: product.price,
-          status: product.status,
-          stock: product.stock,
-          category: product.category,
-          thumbnails: product.thumbnails,
-          quantity: product.quantity
-        }))
-      });
-  
-      console.log('Constructed cart:', cart);
-      return cart;
-    } catch (error) {
-      console.log('Error in getCartsById:', error);
-      throw error;
-    }
-  } */
-
-  async getOne(id) {
+  /* async getOne(id) {
     console.log('Entering getOne function with id:', id);
   
     const cartDocument = await cartSchema.findById(id);
@@ -124,7 +89,24 @@ class CartMongooseRepository
   
     console.log('Returning cart:', cart);
     return cart;
-  }
+  } */
+
+  async getOne(id) {
+    console.log('Entering getOne function with id:', id);
+  
+    const cartDocument = await cartSchema.findById(id);
+    console.log('Retrieved cartDocument:', cartDocument);
+    
+    return cartDocument ? new Cart({
+      id: cartDocument._id,
+      products: cartDocument.products.map(document => new ProductInCart ({
+              id: document._id,
+              product: document.product ? new Product(document.product) : null,
+              quantity: document.quantity
+            }))
+        }) : null;
+    }
+  
 
   async update(id, body) {
     try {

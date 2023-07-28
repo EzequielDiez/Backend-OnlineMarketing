@@ -6,7 +6,7 @@ const cartCollection = 'carts'
 const cartSchema = new Schema({
     products: {
         type: [{
-            _id: { type: Schema.Types.ObjectId, require: [true, "ID producto"], ref: 'products'},
+            product: { type: Schema.Types.ObjectId, require: [true, "ID producto"], ref: 'products'},
             quantity: { type: Schema.Types.Number, require: [true, "Cantidad"]}
         }],
         require: [true, "Por lo menos un producto"] 
@@ -16,11 +16,11 @@ const cartSchema = new Schema({
 cartSchema.plugin(paginate)
 
 cartSchema.pre('find', function () {
-this.populate(['products._id']);
+this.populate(['products.product']);
 });
 
 cartSchema.pre('findOne', function () {
-this.populate(['products._id']);
+this.populate(['products.product']);
 });
 
 export default mongoose.model(cartCollection, cartSchema)
