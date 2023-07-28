@@ -1,6 +1,7 @@
 import cartSchema from '../models/cartSchema.js';
 import Product from '../../domain/entities/product.js';
 import Cart from '../../domain/entities/cart.js';
+import ProductInCart from '../../domain/entities/productInCart.js'
 
 class CartMongooseRepository 
 {
@@ -64,7 +65,7 @@ class CartMongooseRepository
     }
   }
 
-  async getOne(id) {
+/*   async getOne(id) {
     try {
       console.log('Fetching cart by ID:', id);
       const cartDocument = await cartSchema.findById(id);
@@ -97,6 +98,32 @@ class CartMongooseRepository
       console.log('Error in getCartsById:', error);
       throw error;
     }
+  } */
+
+  async getOne(id) {
+    console.log('Entering getOne function with id:', id);
+  
+    const cartDocument = await cartSchema.findById(id);
+    console.log('Retrieved cartDocument:', cartDocument);
+  
+    const cart = cartDocument
+      ? new Cart({
+          id: cartDocument._id,
+          products: cartDocument.products.map((document) => {
+            console.log('Mapping product document:', document._id);
+            const product = document.product ? new Product(document.product) : null;
+            console.log('Product:', product);
+            return new ProductInCart({
+              id: document._id,
+              product: product,
+              quantity: document.quantity,
+            });
+          }),
+        })
+      : null;
+  
+    console.log('Returning cart:', cart);
+    return cart;
   }
 
   async update(id, body) {
