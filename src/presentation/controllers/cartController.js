@@ -17,13 +17,13 @@ import CartManager from "../../domain/managers/CartManager.js";
 
   export const addCart = async (req, res) => {
     try {
-      const manager = new CartManager();
-      const newCart = await manager.create();
-      res.status(201).send({ status: 'success', newCart, message: "Cart has been created successfully" });
+        const manager = new CartManager();
+        const newCart = await manager.create();
+        res.status(201).send({ status: 'success', newCart, message: "Cart has been created successfully" });
     } catch (error) {
-      res.status(500).send('Error Server');
+        res.status(500).send('Error Server');
     }
-  };
+};
 
   export const getCartById = async (req, res) => {
     try {
@@ -42,35 +42,21 @@ import CartManager from "../../domain/managers/CartManager.js";
       const { email } = req.user;
       const manager = new CartManager();
       const result = await manager.createCheckout({ id: cid, user: email });
-      console.log("Checkout created:", result);
       res.status(200).send({ status: "success", data: result });
     } catch (error) {
-      console.log("Error:", error);
       res.status(500).send("Error Server");
     }
   };
 
-  export const updateCart = async (req, res) => {
+  export const updateCart = async (req, res, next) => {
     try {
-      const { cid, pid } = req.params;  
-      const manager = new CartManager();
-      const cart = await manager.getOne(cid);
-      const quantity = 1;
-      const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
-  
-      if (productIndex === -1) {
-        cart.products.push({ _id: pid , quantity});
-      } else {
-        cart.products[productIndex].quantity += quantity;
-      }
-    
-      await manager.update(cid, cart);
-  
-      res.status(200).send({ status: 'success', cart, message: "Product has been added to the cart successfully" });
-    } catch (error) {
-      res.status(500).send('Error Server');
+        const cartManager = new CartManager();
+        const result = await cartManager.update(req.params);
+        res.status(200).send({status: "success", message: "Product has been added to the cart successfully", data: result});
+    } catch (err) {
+        next(err);
     }
-  };
+}
 
   export const updateQuantityOnCart = async (req, res) => {
     try {

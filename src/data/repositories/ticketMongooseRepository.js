@@ -49,21 +49,16 @@ class TicketMongooseRepository
     }
 
     async create(data) {
-        try{
-            const ticketDocument = await ticketSchema.create(data)
+        
+        const ticketDoc = await ticketSchema.create(data)
 
-            return new Ticket ({
-                id: ticketDocument._id,
-                code: ticketDocument.code,
-                date: ticketDocument.date,
-                total: ticketDocument.total,
-                user: ticketDocument.user
-            })
-
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+        return ticketDoc ? new Ticket({
+            id: ticketDoc._id,
+            code: ticketDoc.code,
+            date: ticketDoc.date,
+            total: ticketDoc.total,
+            user: ticketDoc.user
+        }) : null;
     }
 
     async deleteOne(id) {

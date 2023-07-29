@@ -1,4 +1,5 @@
 import container from "../../container.js";
+import { nanoid } from "nanoid";
 
 class CartManager {
   constructor() {
@@ -9,11 +10,12 @@ class CartManager {
 
   async create(data) {
     try {
-      return await this.cartRepository.create(data);
+        const result = await this.cartRepository.create(data);
+        return result;
     } catch (error) {
-      throw error;
+        throw error;
     }
-  }
+}
 
   async paginate(criteria) {
     try {
@@ -35,25 +37,20 @@ class CartManager {
     
     const { id, user } = data;    
     const cart = await this.cartRepository.getOne(id);
-    console.log('Cart:', cart);
     
     let total = 0;
     
     for (const productInCart of cart.products) {
-      console.log('Processing product:', productInCart.product);
       
       const newStock = productInCart.product.stock - productInCart.quantity;
       
       if (newStock < 0) {
         throw new Error(`The product ${productInCart.product.title} - ${productInCart.product.code} doesn't have stock`);
       }
-      
-      console.log('New stock:', newStock);
-      
+            
       total += productInCart.product.price * productInCart.quantity;
       
       await this.productRepository.update(productInCart.product.id, { stock: newStock, status: newStock > 0 ? true : false});
-      console.log('Product updated:', productInCart.product);
     }
     
     const code = nanoid(15);
@@ -64,26 +61,25 @@ class CartManager {
       total,
       user
     };
-    
-    console.log('Ticket data:', ticketData);
-    
-    const ticket = await this.ticketRepository.save(ticketData);
-    console.log('Ticket saved:', ticket);
-    
-    console.log('Exiting createCheckout function');
+      
+    const ticket = await this.ticketRepository.create(ticketData);
     
     return ticket;
   }
 
-  
+  async update(data) {
+    const { cid, pid } = await data
 
-  async update(id, body) {
-    try {
-      return await this.cartRepository.update(id, body)
-    } catch (error) {
-      throw error
-    }
-  }
+    const productExist = await this.productRepository.getOne(pid);
+
+    if (!productExist) throw new Error("Product not found");
+
+    const result = await this.cartRepository.update({ cid, pid });
+
+    if (!result) throw new Error("Cart not found");
+
+    return result;
+}
 
   async deleteCart(cartId) {
     try {

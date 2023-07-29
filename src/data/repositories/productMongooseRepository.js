@@ -32,73 +32,56 @@ class ProductMongooseRepository {
     }
 
     async getOne(id) {
-        try {
-            const productDocument = await productSchema.findById(id).where({ status: true })
-            if (!productDocument) return null
+        const productDoc = await productSchema.findById(id);
 
-            return new Product ({
-                id: productDocument._id,
-                title: productDocument.title,
-                description: productDocument.description,
-                code: productDocument.code,
-                price: productDocument.price,
-                status: productDocument.status,
-                stock: productDocument.stock,
-                category: productDocument.category,
-                thumbnails: productDocument.thumbnails,
-            })
-
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+        return productDoc ? new Product({
+            id: productDoc._id,
+            title: productDoc.title,
+            description: productDoc.description,
+            price: productDoc.price,
+            thumbnails: productDoc.thumbnails ?? null,
+            category: productDoc.category,
+            code: productDoc.code,
+            status: productDoc.status,
+            stock: productDoc.stock
+        }): null;
     }
 
     async create(data) {
-        try {
-            const productDocument = await productSchema.create(data)
-            if (!productDocument) return null
+        const productDoc = await productSchema.create(data)
 
-            return new Product ({
-                id: productDocument._id,
-                title: productDocument.title,
-                description: productDocument.description,
-                code: productDocument.code,
-                price: productDocument.price,
-                status: productDocument.status,
-                stock: productDocument.stock,
-                category: productDocument.category,
-                thumbnails: productDocument.thumbnails,
-            })
-
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+        return productDoc ? new Product({
+            id: productDoc._id,
+            title: productDoc.title,
+            description: productDoc.description,
+            price: productDoc.price,
+            thumbnails: productDoc.thumbnails ?? null,
+            category: productDoc.category,
+            code: productDoc.code,
+            status: productDoc.status,
+            stock: productDoc.stock
+        }) : null;
     }
 
-    async update(id, body) {
-        try {
-            const productDocument = await productSchema.findByIdAndUpdate(id, body, { new: true })
-            if (!productDocument) return null
+    async update(data) {
+        const { pid, update } = data;
 
-            return new Product ({
-                id: productDocument._id,
-                title: productDocument.title,
-                description: productDocument.description,
-                code: productDocument.code,
-                price: productDocument.price,
-                status: productDocument.status,
-                stock: productDocument.stock,
-                category: productDocument.category,
-                thumbnails: productDocument.thumbnails,
-            })
+        const productDoc = await productSchema.findByIdAndUpdate(pid, update, {new: true});
 
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+        return productDoc ? new Product({
+            id: productDoc._id,
+            title: productDoc.title,
+            description: productDoc.description,
+            price: productDoc.price,
+            thumbnails: productDoc.thumbnails ?? null,
+            category: productDoc.category,
+            code: productDoc.code,
+            status: productDoc.status,
+            stock: productDoc.stock
+        }) : null;
     }
+
+
 
     async delete(id) {
         try {
