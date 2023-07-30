@@ -1,6 +1,7 @@
 import cartSchema from "../models/cartSchema.js";
 import userSchema from "../models/userSchema.js";
 import User from "../../domain/entities/user.js";
+import Role from "../../domain/entities/role.js";
 
 class UserMongooseRepository
 {
@@ -102,26 +103,21 @@ class UserMongooseRepository
         }
     }
 
-    async updateOne(id, data) {
-        try {
-            const userDocument = await userSchema.findOneAndUpdate({ _id: id }, data, { new: true});
+    async update(data) {
+        const { uid, update } = data;
 
-            if(!userDocument) return null
+        const userDoc = await userSchema.findByIdAndUpdate(uid, update, {new: true});
 
-            return new User ({
-                id: userDocument._id,
-                firstName: userDocument.firstName,
-                lastName: userDocument.lastName,
-                email: userDocument.email,
-                age: userDocument.age,
-                cart: userDocument.cart,
-                role: userDocument.role,
-            })
-            
-        } catch (error) {
-            console.error(error);
-            throw error
-        }
+        return userDoc ? new User({
+            id: userDoc._id,
+            firstName: userDoc.firstName,
+            lastName: userDoc.lastName,
+            email: userDoc.email,
+            age: userDoc.age,
+            role: userDoc.role ? new Role(userDoc.role) : null,
+            isAdmin: userDoc.isAdmin,
+            password: userDoc.password,
+        }) : null;
     }
 
     async deleteOne(id) {
