@@ -1,51 +1,29 @@
 import container from "../../container.js";
 
 class ProductManager {
-
     constructor() {
-      this.productRepository = container.resolve('ProductRepository');
+        this.productRepository = container.resolve('ProductRepository');
     }
-  
+
     async paginate(criteria) {
-      try {
-        let products = await this.productRepository.paginate(criteria);
-        return products;
-      } catch (error) {
-        throw error;
-      }
-    };
+        return await this.productRepository.paginate(criteria);
+    }
 
-  async getOne(id) {
-      try {
-          return this.productRepository.getOne(id);
-      } catch (error) {
-          throw error;
-      }
-  };
+    async getOne(id) {
+        return await this.productRepository.getOne(id);
+    }
 
-  async create(data) {
-      try {
-          return this.productRepository.create(data);
-      } catch (error) {
-          throw error;
-      }
-  };
+    async create(data) {
+        return await this.productRepository.create(data);
+    }
 
-  async update(id, body) {
-      try {
-          return this.productRepository.update(id, body, { new: true });
-      } catch (error) {
-          throw error;
-      }
-  };
+    async update(pid, update) {
+        return await this.productRepository.update(pid, update, { new: true });
+    }
 
-  async delete(id) {
-      try {
-          return this.productRepository.delete(id, { status: false }, { new: true });
-      } catch (error) {
-          throw error;
-      }
-  };
-  }
+    async delete(id) {
+        return await this.productRepository.delete(id, { status: false }, { new: true });
+    }
+}
 
 export default ProductManager;

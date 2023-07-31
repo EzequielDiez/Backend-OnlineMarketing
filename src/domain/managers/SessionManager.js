@@ -47,8 +47,8 @@ class SessionManager {
 
         const token = generateResetToken(user);
 
-        await EmailManager.send({
-            templateFile: "forgotPasswordTemplate.hbs",
+        await EmailManager.sendEmail({
+            templateFileName: "forgotPasswordTemplate.hbs",
             payload: {
                 email,
                 subject: "Change password",

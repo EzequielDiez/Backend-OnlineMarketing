@@ -66,27 +66,25 @@ export const addProduct = async (req, res) => {
 
 
 export const updateProduct = async (req, res) => {
-    
-    try {
-      const id = req.params.pid;
-      const update = req.body;
+  try {
+    const pid = req.params.pid;
+    const update = req.body;
 
-      // No se debe actualizar el id del producto
-      delete update.id;
+    delete update.id;
 
-      const manager = new ProductManager()
-      const success = await manager.update(id, update);
-  
-      if (success) {
-        res.status(200).json({ status: 'success', success, message: 'Product updated.' })
-      } else {
-        res.status(404).json({ message: 'Producto no encontrado.' });
-      }
-    } catch (error) {
-      console.log('Error en PUT /:pid:', error);
-      res.status(500).json({ message: 'Error al actualizar el producto.' });
+    const manager = new ProductManager();
+    const success = await manager.update(pid, update);
+
+    if (success) {
+      res.status(200).json({ status: 'success', success, message: 'Product updated.' });
+    } else {
+      res.status(404).json({ message: 'Producto no encontrado.' });
     }
-  };
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el producto.' });
+  }
+};
+
 
 export const deleteProduct = async (req, res) => {
     

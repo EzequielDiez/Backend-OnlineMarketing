@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmación de compra</title>
+</head>
+<body>
+    <div style="background-color: #f1f1f1; padding: 20px;">
+        <h1 style="color: #007BFF;">¡Gracias por su compra!</h1>
+        <p>Estimado(a) {{email}},</p>
+        <p>Hemos recibido su orden de compra con éxito. A continuación, encontrará los detalles de su ticket:</p>
+        <br>
+        <h3>Ticket:</h3>
+        <div style="border: 1px solid #ccc; padding: 10px;">
+            <p><strong>Código:</strong> {{code}}</p>
+            <p><strong>Total:</strong> ${{total}}</p>
+        </div>
+        <br>
+        <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de soporte.</p>
+        <p>¡Gracias nuevamente por elegir nuestros servicios!</p>
+        <p>Atentamente,</p>
+        <p>El equipo de [Nombre de la Empresa]</p>
+    </div>
+</body>
+</html>
