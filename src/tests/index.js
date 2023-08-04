@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import AppFactory from "../presentation/factories/appFactory.js"
-import DbFactory from "../data/factories/DbFactory.js"
+import DbFactory from "../data/factories/dbFactory.js"
 
 const initServer = async () => 
 {
