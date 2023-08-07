@@ -1,0 +1,229 @@
+paths:
+  /api/users:
+    get:
+      summary: Obtener lista de usuarios
+      description: Obtiene una lista de todos los usuarios registrados.
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Cantidad máxima de usuarios a obtener por página (predeterminado:10)
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Número de página para paginación (predeterminado:1)
+      responses:
+        '200':
+          description: Lista de usuarios obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  total:
+                    type: integer
+                    example: 25
+                  limit:
+                    type: integer
+                    example: 10
+                  page:
+                    type: integer
+                    example: 1
+
+  /api/users/{id}:
+    get:
+      summary: Obtener usuario por ID
+      description: Obtiene un usuario específico por su ID.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID del usuario a obtener
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Usuario obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+
+    post:
+      summary: Crear nuevo usuario
+      description: Crea un nuevo usuario.
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Datos del usuario a crear
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      summary: Actualizar usuario por ID
+      description: Actualiza un usuario específico por su ID.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID del usuario a actualizar
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Datos del usuario a actualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Usuario actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+
+    delete:
+      summary: Eliminar usuario por ID
+      description: Elimina un usuario específico por su ID.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID del usuario a eliminar
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Usuario eliminado correctamente
+        '404':
+          description: Usuario no encontrado
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1234567890
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        age:
+          type: integer
+          example: 30
+        cart:
+          type: object
+          properties:
+            id:
+              type: string
+              example: cart_id
+            products:
+              type: array
+              items:
+                type: object
+                properties:
+                  product:
+                    $ref: '#/components/schemas/Product'
+                  quantity:
+                    type: integer
+                    example: 2
+          required:
+            - products
+        role:
+          $ref: '#/components/schemas/Role'
+      required:
+        - firstName
+        - lastName
+        - email
+        - age
+        - cart
+        - role
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          example: role_id
+        name:
+          type: string
+          example: Admin
+      required:
+        - name
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: product_id
+        name:
+          type: string
+          example: Laptop
+        price:
+          type: number
+          example: 1000
+      required:
+        - name
+        - price
+
+securitySchemes:
+  BearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT

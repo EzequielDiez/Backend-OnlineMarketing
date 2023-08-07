@@ -1,0 +1,166 @@
+paths:
+  /api/login:
+    post:
+      summary: Iniciar sesión
+      description: Permite a los usuarios iniciar sesión con sus credenciales.
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  accessToken:
+                    type: string
+        '400':
+          description: Error de validación o credenciales inválidas
+
+  /api/current:
+    get:
+      summary: Obtener información del usuario actual
+      description: Obtiene la información del usuario actual autenticado.
+      tags:
+        - Sessions
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  payload:
+                    type: object
+        '401':
+          description: No autorizado
+
+  /api/signup:
+    post:
+      summary: Registrarse como nuevo usuario
+      description: Permite a los usuarios registrarse con nuevas credenciales.
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '201':
+          description: Creado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  user:
+                    type: object
+                  message:
+                    type: string
+        '400':
+          description: Error de validación
+
+  /api/forgotPassword:
+    post:
+      summary: Restablecer contraseña
+      description: Permite a los usuarios solicitar un restablecimiento de contraseña.
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '404':
+          description: Usuario no encontrado
+
+  /api/resetPassword:
+    post:
+      summary: Cambiar contraseña
+      description: Permite a los usuarios cambiar su contraseña después de solicitar un restablecimiento.
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Token inválido o contraseña no cumple con los requisitos
+        '404':
+          description: Token no encontrado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

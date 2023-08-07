@@ -1,0 +1,295 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: ID del producto agregado al carrito
+              quantity:
+                type: integer
+                description: Cantidad del producto agregado al carrito
+      required:
+        - products
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: number
+          description: Precio del producto
+        status:
+          type: boolean
+          description: Estado del producto (true si está activo, false si está inactivo)
+        stock:
+          type: number
+          description: Stock disponible del producto
+        category:
+          type: string
+          description: Categoría del producto
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: Lista de enlaces a las imágenes del producto
+
+    Ticket:
+      type: object
+      properties:
+        _id:
+          type: string
+        code:
+          type: string
+          description: Código del ticket
+        date:
+          type: string
+          format: date
+          description: Fecha del ticket
+        total:
+          type: number
+          description: Total del ticket
+        user:
+          type: string
+          description: Email del usuario asociado al ticket
+
+paths:
+  /api/carts:
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Carts
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Límite de resultados por página
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          description: Número de página a obtener
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+
+    post:
+      summary: Agregar un nuevo carrito
+      tags:
+        - Carts
+      requestBody:
+        description: Datos del carrito a agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '201':
+          description: Carrito creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtener un carrito por su ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a obtener
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Carrito no encontrado
+
+    delete:
+      summary: Eliminar un carrito por su ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a eliminar
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Carrito eliminado exitosamente
+        '404':
+          description: Carrito no encontrado
+
+  /api/carts/{cid}/checkout:
+    post:
+      summary: Procesar el checkout del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a procesar el checkout
+          schema:
+            type: string
+      requestBody:
+        description: Datos del checkout
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ID del carrito a procesar
+                user:
+                  type: string
+                  description: Email del usuario para enviar el ticket
+              required:
+                - id
+                - user
+      responses:
+        '200':
+          description: Checkout exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agregar un producto al carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito al que se agregará el producto
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto a agregar al carrito
+          schema:
+            type: string
+      requestBody:
+        description: Datos del producto a agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Cantidad del producto a agregar al carrito
+              required:
+                - quantity
+      responses:
+        '200':
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+    delete:
+      summary: Eliminar un producto del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito al que se eliminará el producto
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto a eliminar del carrito
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto eliminado exitosamente
+        '404':
+          description: Producto no encontrado
+
+    put:
+      summary: Actualizar la cantidad de un producto en el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito al que se actualizará la cantidad del producto
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto al que se actualizará la cantidad
+          schema:
+            type: string
+      requestBody:
+        description: Nueva cantidad del producto en el carrito
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Nueva cantidad del producto en el carrito
+              required:
+                - quantity
+      responses:
+        '200':
+          description: Cantidad de producto actualizada exitosamente
+        '404':
+          description: Producto no encontrado
