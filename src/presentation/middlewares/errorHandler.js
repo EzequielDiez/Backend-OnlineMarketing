@@ -21,7 +21,8 @@ const errorHandler = (err, req, res, next) =>
       return res.status(401).send({ message: 'Email and Password invalid format.'})
   }
 
-	console.log(err.stack);
+	req.logger.error(err);
+    
 	res.status(500).json({ message: 'Ocurrió un error' });
 };
 

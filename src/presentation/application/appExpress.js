@@ -10,6 +10,7 @@ import CartRouter from "../../presentation/routes/CartRouter.js"
 import roleRouter from "../../presentation/routes/RoleRouter.js"
 
 import errorHandler from "../../presentation/middlewares/errorHandler.js"
+import logger from '../middlewares/logger.js';
 import { swaggerOptions } from '../../config/index.js';
 
 class AppExpress
@@ -20,6 +21,7 @@ class AppExpress
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}))
         this.app.use(cookieParser())
+        this.app.use(logger)
     }
 
     build()
@@ -44,13 +46,6 @@ class AppExpress
             console.log('Server started on port 8080');
         });
     }
-
-/*     listen()
-    {
-        this.server = this.app.listen(8080, () => {
-            console.log('Server started on port 8080')
-        })
-    } */
 
     close()
     {

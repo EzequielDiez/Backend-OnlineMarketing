@@ -1,3 +1,4 @@
+import pino from "pino"
 import dotenv from "dotenv";
 dotenv.config();
 import { resolve } from "path"
@@ -21,3 +22,9 @@ export const swaggerOptions = {
     },
     apis: [resolve("docs/*.yaml")]
 }
+
+export const loggerConfig = pino({
+    transport: {
+        target: "pino-pretty"
+    }
+})
