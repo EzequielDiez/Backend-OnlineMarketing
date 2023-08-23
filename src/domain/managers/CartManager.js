@@ -1,48 +1,65 @@
-import container from "../../container.js";
-import { nanoid } from "nanoid";
-import EmailManager from "./EmailManager.js";
+import container from '../../container.js';
+import { nanoid } from 'nanoid';
+import EmailManager from './EmailManager.js';
 
-class CartManager {
-    constructor() {
+class CartManager
+{
+    constructor()
+    {
         this.cartRepository = container.resolve('CartRepository');
         this.productRepository = container.resolve('ProductRepository');
         this.ticketRepository = container.resolve('TicketRepository');
     }
 
-    async create(data) {
-        try {
+    async create(data)
+    {
+        try
+        {
             const result = await this.cartRepository.create(data);
             return result;
-        } catch (error) {
+        }
+        catch (error)
+        {
             throw error;
         }
     }
 
-    async paginate(criteria) {
-        try {
+    async paginate(criteria)
+    {
+        try
+        {
             return await this.cartRepository.paginate(criteria);
-        } catch (error) {
+        }
+        catch (error)
+        {
             throw error;
         }
     }
 
-    async getOne(id) {
-        try {
+    async getOne(id)
+    {
+        try
+        {
             return await this.cartRepository.getOne(id);
-        } catch (error) {
+        }
+        catch (error)
+        {
             throw error;
         }
     }
 
-    async createCheckout(data) {
+    async createCheckout(data)
+    {
         const { id, user } = data;
         const cart = await this.cartRepository.getOne(id);
         let total = 0;
 
-        for (const productInCart of cart.products) {
+        for (const productInCart of cart.products)
+        {
             const newStock = productInCart.product.stock - productInCart.quantity;
 
-            if (newStock < 0) {
+            if (newStock < 0)
+            {
                 throw new Error(
                     `The product ${productInCart.product.title} - ${productInCart.product.code} doesn't have stock`
                 );
@@ -52,20 +69,20 @@ class CartManager {
 
             await this.productRepository.update(productInCart.product.id, {
                 stock: newStock,
-                status: newStock > 0 ? true : false,
+                status: newStock > 0 ? true : false
             });
         }
 
         const code = nanoid(15);
 
         await EmailManager.sendEmail({
-            templateFileName: "ticketBuyTemplate.hbs",
+            templateFileName: 'ticketBuyTemplate.hbs',
             payload: {
                 email: user,
-                subject: "Ticket de compra",
+                subject: 'Ticket de compra',
                 code,
-                total,
-            },
+                total
+            }
         });
 
         await this.cartRepository.deleteCart(cart.id);
@@ -74,31 +91,42 @@ class CartManager {
             code,
             date: new Date(),
             total,
-            user,
+            user
         });
 
         return ticket;
     }
 
-    async update(data) {
+    async update(data)
+    {
         const { cid, pid } = await data;
         const productExist = await this.productRepository.getOne(pid);
 
-        if (!productExist) throw new Error("Product not found");
+        if (!productExist)
+        {
+            throw new Error('Product not found');
+        }
 
         const result = await this.cartRepository.update({ cid, pid });
 
-        if (!result) throw new Error("Cart not found");
+        if (!result)
+        {
+            throw new Error('Cart not found');
+        }
 
         return result;
     }
 
-    async deleteCart(cartId) {
-        try {
+    async deleteCart(cartId)
+    {
+        try
+        {
             await this.cartRepository.getOne(cartId);
             const { id } = await this.cartRepository.getOne(cartId);
             return this.cartRepository.deleteCart(cartId, { _id: id, products: [] });
-        } catch (error) {
+        }
+        catch (error)
+        {
             throw error;
         }
     }

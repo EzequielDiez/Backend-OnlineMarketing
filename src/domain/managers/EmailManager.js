@@ -1,12 +1,14 @@
-import nodemailer from "nodemailer";
-import Handlebars from "handlebars";
-import fs from "fs";
-import { resolve } from "path";
+import nodemailer from 'nodemailer';
+import Handlebars from 'handlebars';
+import fs from 'fs';
+import { resolve } from 'path';
 
-import { smtp_config } from "../../config/index.js";
+import { smtp_config } from '../../config/index.js';
 
-class EmailManager {
-    static async sendEmail(data) {
+class EmailManager
+{
+    static async sendEmail(data)
+    {
         const { templateFileName, payload } = data;
         const transporter = nodemailer.createTransport(smtp_config);
         const templatePath = resolve(`src/presentation/templates/${templateFileName}`);

@@ -1,8 +1,10 @@
-import productSchema from "../models/productSchema.js";
-import Product from "../../domain/entities/product.js";
+import productSchema from '../models/productSchema.js';
+import Product from '../../domain/entities/product.js';
 
-class ProductMongooseRepository {
-    async paginate(criteria) {
+class ProductMongooseRepository
+{
+    async paginate(criteria)
+    {
         const { limit, page } = criteria;
         const productDocuments = await productSchema.paginate({ status: true }, { limit, page });
         const { docs, ...paginationInfo } = productDocuments;
@@ -23,7 +25,8 @@ class ProductMongooseRepository {
         } : null;
     }
 
-    async getOne(id) {
+    async getOne(id)
+    {
         const productDocument = await productSchema.findById(id);
 
         return productDocument ? new Product({
@@ -39,7 +42,8 @@ class ProductMongooseRepository {
         }) : null;
     }
 
-    async create(data) {
+    async create(data)
+    {
         const productDocument = await productSchema.create(data);
 
         return productDocument ? new Product({
@@ -55,8 +59,8 @@ class ProductMongooseRepository {
         }) : null;
     }
 
-    async update(pid, update) {
-
+    async update(pid, update)
+    {
         const productDocument = await productSchema.findByIdAndUpdate(pid, update, { new: true });
 
         return productDocument ? new Product({
@@ -71,9 +75,10 @@ class ProductMongooseRepository {
             stock: productDocument.stock
         }) : null;
     }
-    
 
-    async delete(id) {
+
+    async delete(id)
+    {
         const productDocument = await productSchema.findByIdAndUpdate(id, { status: false }, { new: true });
 
         return productDocument ? true : null;

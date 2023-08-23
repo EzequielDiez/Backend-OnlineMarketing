@@ -1,10 +1,10 @@
 import z from 'zod';
-import idValidation from "../shared/idValidation.js";
-import userCreateValidation from "./userCreateValidation.js";
+import idValidation from '../shared/idValidation.js';
+import userCreateValidation from './userCreateValidation.js';
 
 const userUpdateValidation = z.union([
-  idValidation,
-  userCreateValidation
+    idValidation,
+    userCreateValidation
 ]);
 
 export default userUpdateValidation;

@@ -1,17 +1,26 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-class MongooseAdapter {
-    async init(uri) {
-        try {
+class MongooseAdapter
+{
+    async init(uri)
+    {
+        try
+        {
             await mongoose.connect(uri);
-        } catch (err) {
+        }
+        catch (err)
+        {
         }
     }
 
-    async close() {
-        try {
+    async close()
+    {
+        try
+        {
             await mongoose.connection.close();
-        } catch (err) {
+        }
+        catch (err)
+        {
         }
     }
 }

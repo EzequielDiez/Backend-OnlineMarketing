@@ -1,81 +1,81 @@
-import initServer from "./index.js";
-import { faker } from "@faker-js/faker"
-import supertest from "supertest";
+import initServer from './index.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-describe ("Testing Session Endpoints", () => 
+describe ('Testing Session Endpoints', () =>
 {
     let requester;
     let db;
-    let jwt = "";
+    let jwt = '';
     let userPayload = {};
 
-    beforeAll (async () => 
+    beforeAll (async() =>
     {
-        const server = await initServer()
-        const application = server.app.callback()
-        requester = supertest.agent(application)
-        db = server.db
-        userPayload = 
+        const server = await initServer();
+        const application = server.app.callback();
+        requester = supertest.agent(application);
+        db = server.db;
+        userPayload =
         {
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             email: faker.internet.email(),
-            password: faker.internet.password(),
-        }
-    })
+            password: faker.internet.password()
+        };
+    });
 
-    afterAll (async () => 
+    afterAll (async() =>
     {
-        await db.close()
-    })
+        await db.close();
+    });
 
-    describe ("Testing Session Endpoints Success", () => 
+    describe ('Testing Session Endpoints Success', () =>
     {
-        test ("Create account /api/sessions/signup", async () => 
+        test ('Create account /api/sessions/signup', async() =>
         {
             const signupResult = await requester
-            .post ("/api/sessions/signup")
-            .send (userPayload)
-            .expect (201)
+                .post ('/api/sessions/signup')
+                .send (userPayload)
+                .expect (201);
 
-            const { body: signupBody } = signupResult
+            const { body: signupBody } = signupResult;
 
-            expect (signupBody.message).toBe("You have successfully registered")
-        })
+            expect (signupBody.message).toBe('You have successfully registered');
+        });
 
-        test ("Login with account /api/sessions/login", async () => 
+        test ('Login with account /api/sessions/login', async() =>
         {
-            const loginCredentials = 
+            const loginCredentials =
             {
                 email: userPayload.email,
-                password: userPayload.password,
-            }
+                password: userPayload.password
+            };
 
             const loginResult = await requester
-            .post ("/api/sessions/login")
-            .send (loginCredentials)
-            .expect (200)
+                .post ('/api/sessions/login')
+                .send (loginCredentials)
+                .expect (200);
 
-            const { body: loginBody } = loginResult
+            const { body: loginBody } = loginResult;
 
-            expect (loginBody.message).toBe("You have successfully logged in")
-            expect (loginBody.accessToken).toBeTruthy()
+            expect (loginBody.message).toBe('You have successfully logged in');
+            expect (loginBody.accessToken).toBeTruthy();
 
-            jwt = loginBody.accessToken
-        })
+            jwt = loginBody.accessToken;
+        });
 
-        test ("Get current account /api/sessions/current", async () => 
+        test ('Get current account /api/sessions/current', async() =>
         {
             const getCurrentResult = await requester
-            .get ("/api/sessions/current")
-            .set ("Authorization", `Bearer ${jwt}`)
-            .expect (200)
+                .get ('/api/sessions/current')
+                .set ('Authorization', `Bearer ${jwt}`)
+                .expect (200);
 
-            const { body: getCurrentBody } = getCurrentResult
+            const { body: getCurrentBody } = getCurrentResult;
 
-            expect (getCurrentBody.payload.email.toLowerCase()).toBe(userPayload.email.toLowerCase())
-            expect (getCurrentBody.payload.firstName).toBe(userPayload.firstName)
-            expect (getCurrentBody.payload.lastName).toBe(userPayload.lastName)
-        })
-    })
-})
+            expect (getCurrentBody.payload.email.toLowerCase()).toBe(userPayload.email.toLowerCase());
+            expect (getCurrentBody.payload.firstName).toBe(userPayload.firstName);
+            expect (getCurrentBody.payload.lastName).toBe(userPayload.lastName);
+        });
+    });
+});

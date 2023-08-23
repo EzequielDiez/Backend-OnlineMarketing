@@ -7,5 +7,5 @@ class Mail
         this.subject = props.subject;
         this.body = props.body;
         this.attachments = props.attachments;
-    } 
+    }
 }

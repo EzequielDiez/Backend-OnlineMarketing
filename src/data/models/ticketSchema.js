@@ -1,7 +1,7 @@
-import mongoose, {Schema} from "mongoose"
-import paginate from "mongoose-paginate-v2"
+import mongoose, { Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
-const ticketCollection = 'tickets'
+const ticketCollection = 'tickets';
 
 const ticketSchema = new Schema(
     {
@@ -10,8 +10,8 @@ const ticketSchema = new Schema(
         total: { type: Schema.Types.Number, require: true },
         user: { type: Schema.Types.String, require: true }
     }
-)
+);
 
-ticketSchema.plugin(paginate)
+ticketSchema.plugin(paginate);
 
-export default mongoose.model(ticketCollection, ticketSchema)
+export default mongoose.model(ticketCollection, ticketSchema);

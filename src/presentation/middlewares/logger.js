@@ -1,11 +1,12 @@
-import { loggerConfig } from "../../config/index.js";
+import { loggerConfig } from '../../config/index.js';
 
-const logger = (req, res, next) => {
-    req.logger = loggerConfig
+const logger = (req, res, next) =>
+{
+    req.logger = loggerConfig;
 
-    req.logger.info(`${req.method} in ${req.url} - ${new Date().toLocaleTimeString()}`)
+    req.logger.info(`${req.method} in ${req.url} - ${new Date().toLocaleTimeString()}`);
 
-    next()
-}
+    next();
+};
 
-export default logger
+export default logger;

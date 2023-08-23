@@ -1,10 +1,10 @@
-import pino from "pino"
-import dotenv from "dotenv";
+import pino from 'pino';
+import dotenv from 'dotenv';
 dotenv.config();
-import { resolve } from "path"
+import { resolve } from 'path';
 
 export const smtp_config = {
-    service: "gmail",
+    service: 'gmail',
     port: 587,
     auth: {
         user: process.env.SMTP_EMAIL,
@@ -16,15 +16,15 @@ export const swaggerOptions = {
     definition: {
         openapi: '3.0.1',
         info: {
-            title: "Documentation Ecommerce API",
-            description: "This is the documentation of the API created for an ecommerce."
+            title: 'Documentation Ecommerce API',
+            description: 'This is the documentation of the API created for an ecommerce.'
         }
     },
-    apis: [resolve("docs/*.yaml")]
-}
+    apis: [resolve('docs/*.yaml')]
+};
 
 export const loggerConfig = pino({
     transport: {
-        target: "pino-pretty"
+        target: 'pino-pretty'
     }
-})
+});

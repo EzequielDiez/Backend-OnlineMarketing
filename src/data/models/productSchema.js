@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import paginate  from "mongoose-paginate-v2";
+import mongoose, { Schema } from 'mongoose';
+import paginate  from 'mongoose-paginate-v2';
 
-const productCollection = 'products'
+const productCollection = 'products';
 
 const productSchema = new Schema({
     title: { type: Schema.Types.String, require: true },
@@ -11,9 +11,9 @@ const productSchema = new Schema({
     status: { type: Schema.Types.Boolean, default: true },
     stock: { type: Schema.Types.Number, require: true },
     category: { type: Schema.Types.String, require: true },
-    thumbnails: { type: Schema.Types.Array, require: true },
-})
+    thumbnails: { type: Schema.Types.Array, require: true }
+});
 
-productSchema.plugin(paginate)
+productSchema.plugin(paginate);
 
-export default mongoose.model(productCollection, productSchema)
+export default mongoose.model(productCollection, productSchema);

@@ -1,29 +1,34 @@
-import jwt from "jsonwebtoken";
-import container from "../../container.js";
-import EmailManager from "./EmailManager.js";
-import { createHash, generateToken, isValidPassword, generateResetToken } from "../../shared/index.js";
-import userCreateValidation from "../validations/user/userCreateValidation.js";
-import loginValidation from "../validations/session/loginValidation.js";
+import jwt from 'jsonwebtoken';
+import container from '../../container.js';
+import EmailManager from './EmailManager.js';
+import { createHash, generateToken, isValidPassword, generateResetToken } from '../../shared/index.js';
+import userCreateValidation from '../validations/user/userCreateValidation.js';
+import loginValidation from '../validations/session/loginValidation.js';
 
-class SessionManager {
-    constructor() {
+class SessionManager
+{
+    constructor()
+    {
         this.userRepository = container.resolve('UserRepository');
     }
 
-    async login(email, password) {
+    async login(email, password)
+    {
         await loginValidation.parseAsync({ email, password });
 
         const user = await this.userRepository.getOneByEmail(email);
         const isHashedPassword = await isValidPassword(password, user.password);
 
-        if (!isHashedPassword) {
+        if (!isHashedPassword)
+        {
             throw new Error('Login failed, invalid password.');
         }
 
         return await generateToken(user);
     }
 
-    async signup(payload) {
+    async signup(payload)
+    {
         await userCreateValidation.parseAsync(payload);
 
         const dto = {
@@ -36,22 +41,24 @@ class SessionManager {
         return { ...user, password: undefined };
     }
 
-    async forgotPassword(data) {
+    async forgotPassword(data)
+    {
         const email = data;
 
         const user = await this.userRepository.getOneByEmail(email);
 
-        if (!user) {
-            throw new Error("User not found");
-        } 
+        if (!user)
+        {
+            throw new Error('User not found');
+        }
 
         const token = generateResetToken(user);
 
         await EmailManager.sendEmail({
-            templateFileName: "forgotPasswordTemplate.hbs",
+            templateFileName: 'forgotPasswordTemplate.hbs',
             payload: {
                 email,
-                subject: "Change password",
+                subject: 'Change password',
                 token,
                 serverPort: process.env.NODE_PORT
             }
@@ -60,27 +67,31 @@ class SessionManager {
         return true;
     }
 
-    async resetPassword(data) {
+    async resetPassword(data)
+    {
         const { token, newPassword } = data;
 
-        try {
-            const { user } = jwt.verify(token, process.env.JWT_RESET_KEY)
+        try
+        {
+            const { user } = jwt.verify(token, process.env.JWT_RESET_KEY);
 
             const userUpdated = await this.userRepository.update({
                 uid: user.id,
-                update: { password: await createHash(newPassword) },
+                update: { password: await createHash(newPassword) }
             });
-            
-            if (!userUpdated) {
-                throw new Error("User not found");
+
+            if (!userUpdated)
+            {
+                throw new Error('User not found');
             }
 
             return true;
-
-        } catch (error) {
-            throw new Error("Your token has expired");
         }
-    }   
+        catch (error)
+        {
+            throw new Error('Your token has expired');
+        }
+    }
 }
 
 export default SessionManager;

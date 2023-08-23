@@ -1,27 +1,34 @@
-import container from "../../container.js";
+import container from '../../container.js';
 
-class ProductManager {
-    constructor() {
+class ProductManager
+{
+    constructor()
+    {
         this.productRepository = container.resolve('ProductRepository');
     }
 
-    async paginate(criteria) {
+    async paginate(criteria)
+    {
         return await this.productRepository.paginate(criteria);
     }
 
-    async getOne(id) {
+    async getOne(id)
+    {
         return await this.productRepository.getOne(id);
     }
 
-    async create(data) {
+    async create(data)
+    {
         return await this.productRepository.create(data);
     }
 
-    async update(pid, update) {
+    async update(pid, update)
+    {
         return await this.productRepository.update(pid, update, { new: true });
     }
 
-    async delete(id) {
+    async delete(id)
+    {
         return await this.productRepository.delete(id, { status: false }, { new: true });
     }
 }
