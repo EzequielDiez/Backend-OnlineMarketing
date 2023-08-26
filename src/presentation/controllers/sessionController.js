@@ -1,6 +1,8 @@
 import SessionManager from '../../domain/managers/SessionManager.js';
 import loginValidation from '../../domain/validations/session/loginValidation.js';
 
+import { generateToken, generateLogoutToken } from '../../shared/index.js';
+
 export const login = async(req, res, next) =>
 {
     try
@@ -10,6 +12,7 @@ export const login = async(req, res, next) =>
         await loginValidation.parseAsync(req.body);
 
         const manager = new SessionManager();
+        await manager.changeLastConnection(email)
         const accessToken = await manager.login(email, password);
 
         res.cookie('accessToken', accessToken, {
@@ -49,6 +52,24 @@ export const signup = async(req, res, next) =>
         next(error);
     }
 };
+
+export const logout = async (req, res, next) =>
+{
+    try
+    {
+        const manager = new SessionManager();
+        await manager.changeLastConnection(req.user.email);
+        const token = generateLogoutToken();
+        res.clearCookie('accessToken', {
+            maxAge: 60 * 60 * 1000,
+            httpOnly: true
+        }).send({ status: 'success', message: "You have succesfully logged out", token });
+    }
+    catch (error)
+    {
+        next(error)
+    }
+}
 
 export const forgotPassword = async(req, res, next) =>
 {

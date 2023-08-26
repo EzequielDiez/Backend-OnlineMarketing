@@ -5,6 +5,7 @@ class UserManager
     constructor()
     {
         this.userRepository = container.resolve('UserRepository');
+        this.roleRepository = container.resolve('RoleRepository');
     }
 
     async paginate(criteria)
@@ -43,6 +44,25 @@ class UserManager
         }
     }
 
+    async changePremium(id)
+    {
+        try
+        {
+            const role = await this.roleRepository.getOneByName('premium');
+            console.log('role', role);
+
+            const result = await this.userRepository.update({ uid: id, update: { role: role.id } });
+
+            console.log('result', result);
+
+            return result;
+        }
+        catch (error)
+        {
+            throw error;
+        }
+    }
+
     async create(data)
     {
         try
@@ -55,6 +75,23 @@ class UserManager
         {
             throw error;
         }
+    }
+
+    async addDocuments(data)
+    {
+        const { id, files } = data
+
+        if(!files) throw new Error("The files wasn't provided");
+
+        const user = await this.userRepository.update(
+            {
+                uid: id,
+                update: { documents: files.map((file) => ({ name: file.filename, reference: `public/images/${file.fieldname}`}))}
+            }
+        )
+        if (!user) throw new Error('User not found')
+
+        return true
     }
 
     async updateOne(id, data)

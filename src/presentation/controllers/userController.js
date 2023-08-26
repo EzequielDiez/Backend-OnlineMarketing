@@ -20,6 +20,15 @@ export const getOne = async(req, res) =>
     res.send({ status: 'success', user });
 };
 
+export const changePremium = async(req, res) =>
+{
+    const { uid } = req.params;
+    const manager = new UserManager();
+    const result = await manager.changePremium(uid);
+
+    res.send({ status: 'success', result, message: 'User update to Premium' });
+};
+
 export const save = async(req, res) =>
 {
     const manager = new UserManager();
@@ -27,6 +36,14 @@ export const save = async(req, res) =>
 
     res.send({ status: 'success', user, message: 'User created.' });
 };
+
+export const insertDocuments = async(req, res) =>
+{
+    const { uid } = req.params;
+    const manager = new UserManager();
+    await manager.addDocuments({ id: uid, files: req.files });
+    res.status(200).send({ status: 'success', message: 'The documents has been added successfully' })
+}
 
 export const update = async(req, res) =>
 {

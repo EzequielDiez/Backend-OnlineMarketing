@@ -69,7 +69,8 @@ export const addProduct = async(req, res) =>
         };
 
         const manager = new ProductManager();
-        const productId = await manager.create(newProduct);
+        const productId = await manager.create({ product: newProduct, user: req.user }); // newProduct
+        console.log('productId', productId);
         res.status(201).json({ status: 'success', productId, message: 'Product created.' });
     }
     catch (error)
@@ -115,7 +116,7 @@ export const deleteProduct = async(req, res) =>
     try
     {
         const manager = new ProductManager();
-        const productDeleted = await manager.delete(productId);
+        const productDeleted = await manager.delete({ id: productId, user: req.user });
 
         if (productDeleted)
         {

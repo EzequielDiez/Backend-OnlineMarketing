@@ -17,6 +17,11 @@ class RoleManager
         return this.roleRepository.getOne(id);
     }
 
+    async getOneByName(data)
+    {
+        return await this.roleRepository.getOneByName(data);
+    }
+
     async create(data)
     {
         return await this.roleRepository.create(data);

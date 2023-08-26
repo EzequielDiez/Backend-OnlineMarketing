@@ -11,6 +11,7 @@ class Product
         this.status = props.status;
         this.stock = props.stock;
         this.category = props.category;
+        this.owner = props.owner;
         this.thumbnails = props.thumbnails;
     }
 }

@@ -19,6 +19,7 @@ class ProductMongooseRepository
                 status: document.status,
                 stock: document.stock,
                 category: document.category,
+                owner: document.owner,
                 thumbnails: document.thumbnails || null
             })),
             ...paginationInfo
@@ -33,12 +34,13 @@ class ProductMongooseRepository
             id: productDocument._id,
             title: productDocument.title,
             description: productDocument.description,
-            price: productDocument.price,
-            thumbnails: productDocument.thumbnails || null,
-            category: productDocument.category,
             code: productDocument.code,
+            price: productDocument.price,
             status: productDocument.status,
-            stock: productDocument.stock
+            stock: productDocument.stock,
+            category: productDocument.category,
+            owner: productDocument.owner,
+            thumbnails: productDocument.thumbnails || null
         }) : null;
     }
 
@@ -50,12 +52,13 @@ class ProductMongooseRepository
             id: productDocument._id,
             title: productDocument.title,
             description: productDocument.description,
-            price: productDocument.price,
-            thumbnails: productDocument.thumbnails || null,
-            category: productDocument.category,
             code: productDocument.code,
+            price: productDocument.price,
             status: productDocument.status,
-            stock: productDocument.stock
+            stock: productDocument.stock,
+            category: productDocument.category,
+            owner: productDocument.owner,
+            thumbnails: productDocument.thumbnails || null
         }) : null;
     }
 
@@ -67,12 +70,13 @@ class ProductMongooseRepository
             id: productDocument._id,
             title: productDocument.title,
             description: productDocument.description,
-            price: productDocument.price,
-            thumbnails: productDocument.thumbnails || null,
-            category: productDocument.category,
             code: productDocument.code,
+            price: productDocument.price,
             status: productDocument.status,
-            stock: productDocument.stock
+            stock: productDocument.stock,
+            category: productDocument.category,
+            owner: productDocument.owner,
+            thumbnails: productDocument.thumbnails || null
         }) : null;
     }
 

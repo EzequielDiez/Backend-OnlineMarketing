@@ -20,7 +20,8 @@ class UserMongooseRepository
                 email: document.email,
                 age: document.age,
                 cart: document.cart,
-                role: document.role
+                role: document.role,
+                lastConnection: document.lastConnection
             }));
 
             return {
@@ -53,7 +54,8 @@ class UserMongooseRepository
                 email: userDocument?.email,
                 age: userDocument?.age,
                 cart: userDocument?.cart,
-                role: userDocument?.role
+                role: userDocument?.role,
+                lastConnection: userDocument?.lastConnection
             });
         }
         catch (error)
@@ -82,7 +84,8 @@ class UserMongooseRepository
                 age: userDocument?.age,
                 cart: userDocument?.cart,
                 role: userDocument.role,
-                password: userDocument.password
+                password: userDocument.password,
+                lastConnection: userDocument.lastConnection
             });
         }
         catch (error)
@@ -111,7 +114,8 @@ class UserMongooseRepository
                 age: userDocument.age,
                 cart: userDocument.cart,
                 role: userDocument.role,
-                password: userDocument.password
+                password: userDocument.password,
+                lastConnection: userDocument.lastConnection
             });
         }
         catch (error)
@@ -134,8 +138,8 @@ class UserMongooseRepository
             email: userDoc.email,
             age: userDoc.age,
             role: userDoc.role ? new Role(userDoc.role) : null,
-            isAdmin: userDoc.isAdmin,
-            password: userDoc.password
+            password: userDoc.password,
+            lastConnection: userDoc.lastConnection
         }) : null;
     }
 

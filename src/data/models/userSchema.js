@@ -9,8 +9,16 @@ const userSchema = new Schema ({
     email: { type: Schema.Types.String, unique: true, require: true },
     age: { type: Schema.Types.Number, require: true },
     cart: { type: Schema.Types.ObjectId, index: true, ref: 'carts' },
-    role: { type: Schema.Types.ObjectId, index: true, ref: 'roles' },
-    password: { type: Schema.Types.String }
+    role: { type: Schema.Types.ObjectId, index: true, ref: 'roles', default: '647fc4883257d40b138c8d33' },
+    password: { type: Schema.Types.String },
+    documents: {
+        type: [{
+            name: { type: Schema.Types.String },
+            reference: { type: Schema.Types.String }
+        }],
+        default: null
+    },
+    lastConnection: { type: Schema.Types.Date, require:true, default: Date.now()}
 });
 
 userSchema.plugin(paginate);

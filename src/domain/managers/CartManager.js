@@ -56,6 +56,11 @@ class CartManager
 
         for (const productInCart of cart.products)
         {
+            if (productInCart.product.owner === user)
+            {
+                throw new Error (`You can't add the same product you add: ${productInCart.product.title} - ${productInCart.product.code}`);
+            }
+
             const newStock = productInCart.product.stock - productInCart.quantity;
 
             if (newStock < 0)

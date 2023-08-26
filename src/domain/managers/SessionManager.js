@@ -92,6 +92,17 @@ class SessionManager
             throw new Error('Your token has expired');
         }
     }
+
+    async changeLastConnection (data)
+    {
+        const user = await this.userRepository.getOneByEmail(data)
+
+        if (!user) throw new Error ('Incorrect User')
+
+        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() }})
+
+        return true
+    }
 }
 
 export default SessionManager;

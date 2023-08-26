@@ -53,6 +53,29 @@ class RoleMongooseRepository
         }
     }
 
+    async getOneByName(data)
+    {
+        try
+        {
+            const document = await RoleSchema.findOne({ name: data });
+
+            if (!document)
+            {
+                return null;
+            }
+
+            return new Role({
+                id: document._id,
+                name: document.name,
+                permissions: document.permissions
+            });
+        }
+        catch (error)
+        {
+            throw error;
+        }
+    }
+
     async create(data)
     {
         try
