@@ -20,14 +20,25 @@ export const getOne = async(req, res) =>
     res.send({ status: 'success', user });
 };
 
-export const changePremium = async(req, res) =>
-{
-    const { uid } = req.params;
-    const manager = new UserManager();
-    const result = await manager.changePremium(uid);
+export const changePremium = async (req, res) => {
+/*     try {
+        console.log("hola");
+        const manager = new UserManager();
+        console.log("manager", manager);
+        const result = await manager.changePremium({ id: req.user.id });
+        
+        await res.send({ status: 'success', result, message: 'User updated to Premium' });
+    } catch (error) {
+        res.status(500).send({ status: 'error', message: 'Failed to change premium status' });
+    } */
 
-    res.send({ status: 'success', result, message: 'User update to Premium' });
+        console.log("hola");
+        /* const manager = new UserManager();
+        console.log("manager", manager);
+        const result = await manager.changePremium({ id: req.user.id });
+        res.send({ status: 'success', result, message: 'User updated to Premium' }); */
 };
+
 
 export const save = async(req, res) =>
 {
@@ -39,9 +50,8 @@ export const save = async(req, res) =>
 
 export const insertDocuments = async(req, res) =>
 {
-    const { uid } = req.params;
     const manager = new UserManager();
-    await manager.addDocuments({ id: uid, files: req.files });
+    await manager.addDocuments({ id: req.user.id, files: req.files });
     res.status(200).send({ status: 'success', message: 'The documents has been added successfully' })
 }
 

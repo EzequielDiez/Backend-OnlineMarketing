@@ -10,8 +10,8 @@ userRouter.use(auth);
 
 userRouter.get('/', authorization('getUsers'), list);
 userRouter.get('/:id', /* authorization('getUser'), */ getOne);
-userRouter.get('/premium/:uid', /*  authorization('bePremium'), */ changePremium);
-userRouter.post('/:uid/documents', uploader.array('documents', 4), insertDocuments)
+userRouter.get('/premium', changePremium);
+userRouter.post('/documents', uploader.array('documents', 4), insertDocuments)
 userRouter.post('/', authorization('saveUser'), save);
 userRouter.put('/:id', authorization('updateUser'), update);
 userRouter.delete('/:id', authorization('deleteUser'), deleteOne);

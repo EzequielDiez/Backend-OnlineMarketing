@@ -25,6 +25,7 @@ export const swaggerOptions = {
 
 export const loggerConfig = pino({
     transport: {
+        level: "debug",
         target: 'pino-pretty'
     }
 });
