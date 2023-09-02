@@ -8,14 +8,31 @@ class ProductManager
         this.roleRepository = container.resolve('RoleRepository');
     }
 
-    async paginate(criteria)
+    async getAll(queryParams)
     {
-        return await this.productRepository.paginate(criteria);
+        const { limit = 10, page = 1 } = queryParams;
+        const result = await this.productRepository.getAll({
+            limit: parseInt(limit, 10),
+            page: parseInt(page, 10)
+        });
+        if (!result)
+        {
+            throw new Error ('No products found');
+        }
+
+        return result;
     }
 
     async getOne(id)
     {
-        return await this.productRepository.getOne(id);
+        const result = await this.productRepository.getOne(id);
+
+        if (!result)
+        {
+            throw new Error ('No product found');
+        }
+
+        return result;
     }
 
     async create(data)
@@ -38,7 +55,7 @@ class ProductManager
         const { id, user } = data;
 
         const product = await this.productRepository.getOne(id);
-        if (!product)
+        if (!product || !product.status)
         {
             throw new Error('Product not found');
         }

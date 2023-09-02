@@ -3,7 +3,7 @@ import Product from '../../domain/entities/product.js';
 
 class ProductMongooseRepository
 {
-    async paginate(criteria)
+    async getAll(criteria)
     {
         const { limit, page } = criteria;
         const productDocuments = await productSchema.paginate({ status: true }, { limit, page });

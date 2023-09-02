@@ -11,6 +11,7 @@ class User
         this.cart = props.cart;
         this.role = props.role;
         this.password = props.password;
+        this.documents = props.documents;
         this.lastConnection = props.lastConnection;
     }
 }

@@ -7,60 +7,47 @@ class CartMongooseRepository
 {
     async create(data)
     {
-        try
-        {
-            const cartDoc = await cartSchema.create(data);
-            const newCart = cartDoc
-                ? new Cart({
-                    id: cartDoc._id,
-                    products: cartDoc.products
-                })
-                : null;
-            return newCart;
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        const cartDoc = await cartSchema.create(data);
+        const newCart = cartDoc
+            ? new Cart({
+                id: cartDoc._id,
+                products: cartDoc.products
+            })
+            : null;
+        return newCart;
     }
 
     async paginate(criteria)
     {
-        try
-        {
-            const { limit, page } = criteria;
-            const cartDocuments = await cartSchema.paginate({}, { limit, page });
-            const { docs, ...pagination } = cartDocuments;
+        const { limit, page } = criteria;
+        const cartDocuments = await cartSchema.paginate({}, { limit, page });
+        const { docs, ...pagination } = cartDocuments;
 
-            const carts = docs.map((document) =>
-            {
-                return new Cart({
-                    id: document._id,
-                    products: document.products.map((product) => new Product({
-                        product: product._id,
-                        title: product.title,
-                        description: product.description,
-                        code: product.code,
-                        price: product.price,
-                        status: product.status,
-                        stock: product.stock,
-                        category: product.category,
-                        thumbnails: product.thumbnails,
-                        quantity: product.quantity
-                    }))
-                });
+        const carts = docs.map((document) =>
+        {
+            return new Cart({
+                id: document._id,
+                products: document.products.map((product) => new Product({
+                    product: product._id,
+                    title: product.title,
+                    description: product.description,
+                    code: product.code,
+                    price: product.price,
+                    status: product.status,
+                    stock: product.stock,
+                    category: product.category,
+                    thumbnails: product.thumbnails,
+                    quantity: product.quantity
+                }))
             });
+        });
 
-            return {
-                carts,
-                pagination
-            };
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        return {
+            carts,
+            pagination
+        };
     }
+
 
     async getOne(id)
     {
@@ -131,36 +118,22 @@ class CartMongooseRepository
 
     async deleteCart(id, cart)
     {
-        try
-        {
-            const cartDocument = await cartSchema.findByIdAndUpdate({ _id: id }, cart, { new: true });
-            return {
-                _id: cartDocument._id
-            };
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        const cartDocument = await cartSchema.findByIdAndUpdate({ _id: id }, cart, { new: true });
+        return {
+            _id: cartDocument._id
+        };
     }
 
     async deleteProductFromCart(cid, newProducts)
     {
-        try
-        {
-            const cartDocument = await cartSchema.findByIdAndUpdate({ _id: cid }, newProducts, { new: true });
-            return new Cart({
-                _id: cartDocument._id,
-                products: cartDocument.products.map((item) => ({
-                    product: item._id,
-                    quantity: item.quantity
-                }))
-            });
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        const cartDocument = await cartSchema.findByIdAndUpdate({ _id: cid }, newProducts, { new: true });
+        return new Cart({
+            _id: cartDocument._id,
+            products: cartDocument.products.map((item) => ({
+                product: item._id,
+                quantity: item.quantity
+            }))
+        });
     }
 }
 

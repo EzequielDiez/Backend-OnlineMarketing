@@ -1,15 +1,17 @@
-import multer from "multer";
-import { resolve } from "path";
+import multer from 'multer';
+import { resolve } from 'path';
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, resolve('src/public/images/documents'))
+    destination: (req, file, cb) =>
+    {
+        cb(null, resolve('src/public/images/documents'));
     },
-    filename: (req, file, cb) => {
+    filename: (req, file, cb) =>
+    {
         cb(null, file.originalname);
     }
-})
+});
 
-const uploader = multer({ storage })
+const uploader = multer({ storage });
 
-export default uploader
+export default uploader;

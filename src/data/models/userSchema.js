@@ -18,7 +18,7 @@ const userSchema = new Schema ({
         }],
         default: null
     },
-    lastConnection: { type: Schema.Types.Date, require:true, default: Date.now()}
+    lastConnection: { type: Schema.Types.Date, require:true, default: Date.now() }
 });
 
 userSchema.plugin(paginate);

@@ -1,7 +1,32 @@
 import ProductManager from '../../domain/managers/ProductManager.js';
 
 
-export const getProducts = async(req, res) =>
+class ProductController {
+
+    static getProducts = async (req, res, next) => {
+        try {
+            const manager = new ProductManager();
+            const paginatedProducts = await manager.getAll(req.query);
+            res.status(200).send({ status: "success", ...paginatedProducts });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    static getProductById = async (req, res, next) => {
+        try {
+            const manager = new ProductManager();
+            const product = await manager.getOne(req.params.pid);
+            res.status(200).json({ status: 'success', product, message: 'Product found.'});
+        } catch (error) {
+            next(error)
+        }
+    }
+}
+
+export default ProductController
+
+/* export const getProducts = async(req, res) =>
 {
     const limit = parseInt(req.query.limit, 10) || 10;
     const page = parseInt(req.query.page, 10) || 1;
@@ -21,9 +46,9 @@ export const getProducts = async(req, res) =>
     {
         res.status(500).send({ status: 'error', message: 'Internal Server Error' });
     }
-};
+}; */
 
-export const getProductById = async(req, res) =>
+/* export const getProductById = async(req, res) =>
 {
     try
     {
@@ -44,7 +69,7 @@ export const getProductById = async(req, res) =>
     {
         res.status(500).json({ message: 'Error Server' });
     }
-};
+}; */
 
 export const addProduct = async(req, res) =>
 {

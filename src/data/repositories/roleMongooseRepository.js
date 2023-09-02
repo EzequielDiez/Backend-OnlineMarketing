@@ -5,131 +5,84 @@ class RoleMongooseRepository
 {
     async paginate(criteria)
     {
-        try
-        {
-            const { limit, page } = criteria;
-            const roleDocuments = await RoleSchema.paginate({}, { limit, page });
-            const { docs, ...pagination } = roleDocuments;
+        const { limit, page } = criteria;
+        const roleDocuments = await RoleSchema.paginate({}, { limit, page });
+        const { docs, ...pagination } = roleDocuments;
 
-            const roles = docs.map(document => new Role ({
-                id: document._id,
-                name: document.name,
-                permissions: document.permissions
-            }));
+        const roles = docs.map(document => new Role ({
+            id: document._id,
+            name: document.name,
+            permissions: document.permissions
+        }));
 
-            return {
-                roles,
-                pagination
-            };
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return {
+            roles,
+            pagination
+        };
     }
 
     async getOne(id)
     {
-        try
-        {
-            const document = await RoleSchema.findOne({ _id: id });
+        const document = await RoleSchema.findOne({ _id: id });
 
-            if (!document)
-            {
-                return null;
-            }
-
-            return new Role({
-                id: document._id,
-                name: document.name,
-                permissions: document.permissions
-            });
-        }
-        catch (error)
+        if (!document)
         {
-            console.error(error);
-            throw error;
+            return null;
         }
+
+        return new Role({
+            id: document._id,
+            name: document.name,
+            permissions: document.permissions
+        });
     }
 
     async getOneByName(data)
     {
-        try
-        {
-            const document = await RoleSchema.findOne({ name: data });
+        const document = await RoleSchema.findOne({ name: data });
 
-            if (!document)
-            {
-                return null;
-            }
-
-            return new Role({
-                id: document._id,
-                name: document.name,
-                permissions: document.permissions
-            });
-        }
-        catch (error)
+        if (!document)
         {
-            throw error;
+            return null;
         }
+
+        return new Role({
+            id: document._id,
+            name: document.name,
+            permissions: document.permissions
+        });
     }
 
     async create(data)
     {
-        try
-        {
-            const document = await RoleSchema.create(data);
+        const document = await RoleSchema.create(data);
 
-            return new Role({
-                id: document._id,
-                name: document.name,
-                permissions: document.permissions
-            });
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return new Role({
+            id: document._id,
+            name: document.name,
+            permissions: document.permissions
+        });
     }
 
     async updateOne(id, data)
     {
-        try
-        {
-            const document = await RoleSchema.findOneAndUpdate({ _id: id }, data, { new: true });
+        const document = await RoleSchema.findOneAndUpdate({ _id: id }, data, { new: true });
 
-            if (!document)
-            {
-                return null;
-            }
-
-            return new Role({
-                id: document._id,
-                name: document.name,
-                permissions: document.permissions
-            });
-        }
-        catch (error)
+        if (!document)
         {
-            console.error(error);
-            throw error;
+            return null;
         }
+
+        return new Role({
+            id: document._id,
+            name: document.name,
+            permissions: document.permissions
+        });
     }
 
     async deleteOne(id)
     {
-        try
-        {
-            return RoleSchema.deleteOne({ _id: id });
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return RoleSchema.deleteOne({ _id: id });
     }
 }
 

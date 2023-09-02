@@ -21,6 +21,7 @@ class UserMongooseRepository
                 age: document.age,
                 cart: document.cart,
                 role: document.role,
+                documents: document.documents,
                 lastConnection: document.lastConnection
             }));
 
@@ -55,6 +56,7 @@ class UserMongooseRepository
                 age: userDocument?.age,
                 cart: userDocument?.cart,
                 role: userDocument?.role,
+                documents: userDocument?.documents,
                 lastConnection: userDocument?.lastConnection
             });
         }
@@ -85,6 +87,7 @@ class UserMongooseRepository
                 cart: userDocument?.cart,
                 role: userDocument.role,
                 password: userDocument.password,
+                documents: userDocument.documents,
                 lastConnection: userDocument.lastConnection
             });
         }
@@ -115,6 +118,7 @@ class UserMongooseRepository
                 cart: userDocument.cart,
                 role: userDocument.role,
                 password: userDocument.password,
+                documents: userDocument.documents,
                 lastConnection: userDocument.lastConnection
             });
         }
@@ -139,6 +143,7 @@ class UserMongooseRepository
             age: userDoc.age,
             role: userDoc.role ? new Role(userDoc.role) : null,
             password: userDoc.password,
+            document: userDoc.documents,
             lastConnection: userDoc.lastConnection
         }) : null;
     }

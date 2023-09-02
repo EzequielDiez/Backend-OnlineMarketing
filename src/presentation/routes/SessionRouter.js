@@ -7,7 +7,7 @@ const sessionRouter = Router();
 sessionRouter.post('/login', login);
 sessionRouter.get('/current', auth, current);
 sessionRouter.post('/signup', signup);
-sessionRouter.get('/logout', auth, logout)
+sessionRouter.get('/logout', auth, logout);
 sessionRouter.post('/forgotPassword', forgotPassword);
 sessionRouter.post('/resetPassword', resetPassword);
 

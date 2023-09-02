@@ -12,7 +12,7 @@ export const login = async(req, res, next) =>
         await loginValidation.parseAsync(req.body);
 
         const manager = new SessionManager();
-        await manager.changeLastConnection(email)
+        await manager.changeLastConnection(email);
         const accessToken = await manager.login(email, password);
 
         res.cookie('accessToken', accessToken, {
@@ -53,7 +53,7 @@ export const signup = async(req, res, next) =>
     }
 };
 
-export const logout = async (req, res, next) =>
+export const logout = async(req, res, next) =>
 {
     try
     {
@@ -63,13 +63,13 @@ export const logout = async (req, res, next) =>
         res.clearCookie('accessToken', {
             maxAge: 60 * 60 * 1000,
             httpOnly: true
-        }).send({ status: 'success', message: "You have succesfully logged out", token });
+        }).send({ status: 'success', message: 'You have succesfully logged out', token });
     }
     catch (error)
     {
-        next(error)
+        next(error);
     }
-}
+};
 
 export const forgotPassword = async(req, res, next) =>
 {

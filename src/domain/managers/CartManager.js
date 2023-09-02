@@ -13,40 +13,22 @@ class CartManager
 
     async create(data)
     {
-        try
-        {
-            const result = await this.cartRepository.create(data);
-            return result;
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        const result = await this.cartRepository.create(data);
+        return result;
     }
+
 
     async paginate(criteria)
     {
-        try
-        {
-            return await this.cartRepository.paginate(criteria);
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        return await this.cartRepository.paginate(criteria);
     }
+
 
     async getOne(id)
     {
-        try
-        {
-            return await this.cartRepository.getOne(id);
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        return await this.cartRepository.getOne(id);
     }
+
 
     async createCheckout(data)
     {
@@ -107,7 +89,7 @@ class CartManager
         const { cid, pid } = await data;
         const productExist = await this.productRepository.getOne(pid);
 
-        if (!productExist)
+        if (!productExist || !productExist.status)
         {
             throw new Error('Product not found');
         }
@@ -124,16 +106,9 @@ class CartManager
 
     async deleteCart(cartId)
     {
-        try
-        {
-            await this.cartRepository.getOne(cartId);
-            const { id } = await this.cartRepository.getOne(cartId);
-            return this.cartRepository.deleteCart(cartId, { _id: id, products: [] });
-        }
-        catch (error)
-        {
-            throw error;
-        }
+        await this.cartRepository.getOne(cartId);
+        const { id } = await this.cartRepository.getOne(cartId);
+        return this.cartRepository.deleteCart(cartId, { _id: id, products: [] });
     }
 }
 

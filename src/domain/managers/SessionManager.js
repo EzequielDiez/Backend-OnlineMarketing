@@ -93,15 +93,18 @@ class SessionManager
         }
     }
 
-    async changeLastConnection (data)
+    async changeLastConnection(data)
     {
-        const user = await this.userRepository.getOneByEmail(data)
+        const user = await this.userRepository.getOneByEmail(data);
 
-        if (!user) throw new Error ('Incorrect User')
+        if (!user)
+        {
+            throw new Error ('Incorrect User');
+        }
 
-        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() }})
+        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() } });
 
-        return true
+        return true;
     }
 }
 

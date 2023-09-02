@@ -27,7 +27,7 @@ export const generateResetToken = (user) =>
     return jwt.sign({ user: { id: user.id } }, process.env.JWT_RESET_KEY, { expiresIn: '10m' });
 };
 
-export const generateLogoutToken = () => 
+export const generateLogoutToken = () =>
 {
-    return jwt.sign({}, process.env.JWT_LOGOUT_KEY, { expiresIn: '0.1s' })
-}
+    return jwt.sign({}, process.env.JWT_LOGOUT_KEY, { expiresIn: '0.1s' });
+};
