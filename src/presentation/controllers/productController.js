@@ -26,51 +26,6 @@ class ProductController {
 
 export default ProductController
 
-/* export const getProducts = async(req, res) =>
-{
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const page = parseInt(req.query.page, 10) || 1;
-    const manager = new ProductManager();
-
-    try
-    {
-        const criteria = {
-            limit,
-            page
-        };
-
-        const paginatedProducts = await manager.paginate(criteria);
-        res.send({ status: 'success', ...paginatedProducts });
-    }
-    catch (error)
-    {
-        res.status(500).send({ status: 'error', message: 'Internal Server Error' });
-    }
-}; */
-
-/* export const getProductById = async(req, res) =>
-{
-    try
-    {
-        const productId = req.params.pid;
-        const manager = new ProductManager();
-        const product = await manager.getOne(productId);
-
-        if (product)
-        {
-            res.status(200).json({ status: 'success', product, message: 'Product found.' });
-        }
-        else
-        {
-            res.status(404).json({ message: 'Product not found.' });
-        }
-    }
-    catch (error)
-    {
-        res.status(500).json({ message: 'Error Server' });
-    }
-}; */
-
 export const addProduct = async(req, res) =>
 {
     try
