@@ -11,14 +11,19 @@ class ProductManager
     async getAll(queryParams)
     {
         const { limit = 10, page = 1 } = queryParams;
-        const result = await this.productRepository.getAll({
-            limit: parseInt(limit, 10),
-            page: parseInt(page, 10)
-        });
-        if (!result)
-        {
-            throw new Error ('No products found');
+
+        const parsedLimit = parseInt(limit, 10);
+        const parsedPage = parseInt(page, 10);
+
+        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+            throw new Error('Invalid pagination parameters');
         }
+
+        const result = await this.productRepository.getAll({
+            limit: parsedLimit,
+            page: parsedPage
+        });
+        if (!result) throw new Error ('No products found');
 
         return result;
     }
@@ -27,10 +32,7 @@ class ProductManager
     {
         const result = await this.productRepository.getOne(id);
 
-        if (!result)
-        {
-            throw new Error ('No product found');
-        }
+        if (!result) throw new Error ('No product found');
 
         return result;
     }
@@ -39,15 +41,25 @@ class ProductManager
     {
         const { product, user } = data;
         const owner = user.role.name === 'admin' ? 'admin' : user.email;
-        const createdProduct = await this.productRepository.create({ ...product, owner });
+        const result = await this.productRepository.create({ ...product, owner });
 
-        return createdProduct;
+        return result;
     }
 
 
-    async update(pid, update)
+    async update(data)
     {
-        return await this.productRepository.update(pid, update, { new: true });
+        const { pid, user, ...update } = data
+
+        const product = await this.productRepository.getOne(pid)
+
+        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner))) throw new Error("Unauthorized");
+
+        const result = await this.productRepository.update(pid, update, { new: true });
+        
+        if(!result) throw new Error ('Product not updated')
+
+        return result
     }
 
     async delete(data)
@@ -55,22 +67,14 @@ class ProductManager
         const { id, user } = data;
 
         const product = await this.productRepository.getOne(id);
-        if (!product || !product.status)
-        {
-            throw new Error('Product not found');
-        }
 
-        if (user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner))
-        {
-        }
-        else
-        {
-            throw new Error('This product can\'t be deleted');
-        }
+        if (!product || !product.status) throw new Error('Product not found');
 
-        const deletedProduct = await this.productRepository.delete(id, { status: false }, { new: true });
+        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner))) throw new Error("Unauthorized");
 
-        return deletedProduct;
+        const result = await this.productRepository.delete(id, { status: false }, { new: true });
+        
+        return result;
     }
 }
 

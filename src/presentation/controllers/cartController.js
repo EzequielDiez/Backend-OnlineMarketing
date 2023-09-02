@@ -1,150 +1,99 @@
 import CartManager from '../../domain/managers/CartManager.js';
 
-export const getCarts = async(req, res) =>
-{
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const page = parseInt(req.query.page, 10) || 1;
-    const manager = new CartManager();
+class CartController {
 
-    try
-    {
-        const criteria = { limit, page };
-        const carts = await manager.paginate(criteria);
-        res.send({ status: 'success', ...carts });
-    }
-    catch (error)
-    {
-        res.status(500).send('Error Server');
-    }
-};
-
-export const addCart = async(req, res) =>
-{
-    try
-    {
-        const manager = new CartManager();
-        const newCart = await manager.create();
-        res.status(201).send({ status: 'success', newCart, message: 'Cart has been created successfully' });
-    }
-    catch (error)
-    {
-        res.status(500).send('Error Server');
-    }
-};
-
-export const getCartById = async(req, res) =>
-{
-    try
-    {
-        const cartId = req.params.cid;
-        const manager = new CartManager();
-        const cart = await manager.getOne(cartId);
-        res.send({ status: 'success', cart });
-    }
-    catch (error)
-    {
-        res.status(500).send('Error Server');
-    }
-};
-
-export const checkout = async(req, res, next) =>
-{
-    try
-    {
-        const { cid } = req.params;
-        const { email } = req.user;
-        const manager = new CartManager();
-        const result = await manager.createCheckout({ id: cid, user: email });
-        res.status(200).send({ status: 'success', data: result });
-    }
-    catch (error)
-    {
-        res.status(500).send('Error Server');
-    }
-};
-
-export const updateCart = async(req, res, next) =>
-{
-    try
-    {
-        const cartManager = new CartManager();
-        const result = await cartManager.update({ ...req.params, ...req.body });
-        res.status(200).send({ status: 'success', message: 'Product has been added to the cart successfully', data: result });
-    }
-    catch (err)
-    {
-        next(err);
-    }
-};
-
-export const updateQuantityOnCart = async(req, res) =>
-{
-    try
-    {
-        const { cid, pid } = req.params;
-        const { quantity } = req.body;
-
-        const manager = new CartManager();
-        const cart = await manager.getOne(cid);
-
-        const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
-
-        if (productIndex !== -1)
-        {
-            cart.products[productIndex].quantity = quantity;
-            const updatedCart = await manager.update(cid, cart);
-            res.status(200).send({ status: 'success', cart: updatedCart, message: 'Product inside the cart has been updated successfully' });
-        }
-        else
-        {
-            res.status(404).send('Product not found in cart');
+    static getCarts = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const paginatedCarts = await cartManager.getAll(req.query);
+            res.status(200).send({ status: "success", ...paginatedCarts });
+        } catch (error) {
+            next(error);
         }
     }
-    catch (error)
-    {
-        res.status(500).send('Server Error');
-    }
-};
 
-export const deleteCart = async(req, res) =>
-{
-    try
-    {
-        const { cid } = req.params;
-        const manager = new CartManager();
-        const result = await manager.deleteCart(cid);
-        res.status(200).send({ status: 'success', result, message: 'Cart has been deleted successfully' });
-    }
-    catch (error)
-    {
-        res.status(500).send('Error Server');
-    }
-};
-
-export const deleteProductFromCart = async(req, res) =>
-{
-    try
-    {
-        const { cid, pid } = req.params;
-
-        const manager = new CartManager();
-        const cart = await manager.getOne(cid);
-
-        const productIndex = cart.products.findIndex((p) => p._id.toString() === pid);
-
-        if (productIndex !== -1)
-        {
-            cart.products.splice(productIndex, 1);
-            const updatedCart = await manager.update(cid, cart);
-            res.status(200).send({ status: 'success', cart: updatedCart, message: 'Product inside the cart has been deleted successfully' });
-        }
-        else
-        {
-            res.status(404).send('Product not found in cart');
+    static getCartById = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const cart = await cartManager.getOne(req.params.cid);
+            res.status(200).send({ status: 'success', cart, message: 'Cart found.'});
+        } catch (error) {
+            next(error)
         }
     }
-    catch (error)
-    {
-        res.status(500).send('Server Error');
+
+    static postCart = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const newCart = await cartManager.create();
+            res.status(201).send({ status: 'success', newCart, message: 'Cart has been created'});
+        } catch (error) {
+            next(error)
+        }
     }
-};
+
+    static postProductInCart = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const result = await cartManager.addOneProduct(req.params);
+            res.status(200).send({ status: 'success', message: 'Product has been added to the cart', data: result });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static updateCart = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const result = await cartManager.updateOne({ ...req.params, ...req.body });
+            res.status(200).send({ status: 'success', message: 'Cart has been updated', data: result });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static updateProductInCart = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager();
+            const result = await cartManager.updateProduct({ ...req.params, ...req.body });
+            res.status(200).send({ status: "success", message: "Product inside the cart has been updated", data: result });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static checkout = async(req, res, next) => {
+        try {
+            const { cid } = req.params;
+            const { email } = req.user;
+            const cartManager = new CartManager();
+            const result = await cartManager.createCheckout({ id: cid, user: email });
+            res.status(200).send({ status: 'success', message: 'Your purchase has been processed', data: result });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static deleteProductFromCart = async(req, res, next) => {
+        try {
+            const cartManager = new CartManager()
+            const result = await cartManager.deleteProduct(req.params)
+            res.status(200).send({ status: 'success', message: 'Product inside the cart has been deleted', data: result})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static deleteCart = async(req, res, next) => {
+        try {
+            const { cid } = req.params;
+            const cartManager = new CartManager();
+            await cartManager.deleteOneCart(cid);
+            res.status(200).send({ status: 'success', message: 'Cart has been deleted' });
+        } catch (error) {
+            next(error)
+        }
+    }
+}
+
+export default CartController

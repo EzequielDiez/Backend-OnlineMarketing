@@ -5,8 +5,8 @@ class ProductController {
 
     static getProducts = async (req, res, next) => {
         try {
-            const manager = new ProductManager();
-            const paginatedProducts = await manager.getAll(req.query);
+            const productManager = new ProductManager();
+            const paginatedProducts = await productManager.getAll(req.query);
             res.status(200).send({ status: "success", ...paginatedProducts });
         } catch (error) {
             next(error);
@@ -15,9 +15,40 @@ class ProductController {
 
     static getProductById = async (req, res, next) => {
         try {
-            const manager = new ProductManager();
-            const product = await manager.getOne(req.params.pid);
-            res.status(200).json({ status: 'success', product, message: 'Product found.'});
+            const productManager = new ProductManager();
+            const product = await productManager.getOne(req.params.pid);
+            res.status(200).send({ status: 'success', product, message: 'Product found.'});
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static postProduct = async (req, res, next) => {
+        try {
+            const productManager = new ProductManager()
+            await productManager.create({ product: req.body, user: req.user })
+            res.status(201).send({ status: 'success', message: 'Product created.'})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static putProduct = async (req, res, next) => {
+        try {
+            const productManager = new ProductManager()
+            const result = await productManager.update({ ...req.params, ...req.body, user: req.user})
+            res.status(200).send({ status: 'success', message: 'Product updated.', result })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static deleteProduct = async (req, res, next) => {
+        try {
+            const { pid } = req.params
+            const productManager = new ProductManager()
+            await productManager.delete({ id: pid, user: req.user})
+            res.status(200).send({ status: 'success', message: 'Product deleted'})
         } catch (error) {
             next(error)
         }
@@ -26,7 +57,7 @@ class ProductController {
 
 export default ProductController
 
-export const addProduct = async(req, res) =>
+/* export const addProduct = async(req, res) =>
 {
     try
     {
@@ -58,57 +89,4 @@ export const addProduct = async(req, res) =>
         console.log('Error in POST /api/products:', error);
         res.status(500).json({ message: 'Ocurrió un error al agregar el producto.' });
     }
-};
-
-
-export const updateProduct = async(req, res) =>
-{
-    try
-    {
-        const pid = req.params.pid;
-        const update = req.body;
-
-        delete update.id;
-
-        const manager = new ProductManager();
-        const success = await manager.update(pid, update);
-
-        if (success)
-        {
-            res.status(200).json({ status: 'success', success, message: 'Product updated.' });
-        }
-        else
-        {
-            res.status(404).json({ message: 'Producto no encontrado.' });
-        }
-    }
-    catch (error)
-    {
-        res.status(500).json({ message: 'Error al actualizar el producto.' });
-    }
-};
-
-
-export const deleteProduct = async(req, res) =>
-{
-    const productId = req.params.pid;
-
-    try
-    {
-        const manager = new ProductManager();
-        const productDeleted = await manager.delete({ id: productId, user: req.user });
-
-        if (productDeleted)
-        {
-            res.send({ status: 'success', message: 'Product deleted.' });
-        }
-        else
-        {
-            res.status(404).json({ message: `El producto con ID: ${productId} no fue encontrado.` });
-        }
-    }
-    catch (error)
-    {
-        res.status(500).json({ message: 'Error Server' });
-    }
-};
+}; */

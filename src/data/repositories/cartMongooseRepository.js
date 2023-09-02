@@ -5,19 +5,7 @@ import ProductInCart from '../../domain/entities/productInCart.js';
 
 class CartMongooseRepository
 {
-    async create(data)
-    {
-        const cartDoc = await cartSchema.create(data);
-        const newCart = cartDoc
-            ? new Cart({
-                id: cartDoc._id,
-                products: cartDoc.products
-            })
-            : null;
-        return newCart;
-    }
-
-    async paginate(criteria)
+    async getAll(criteria)
     {
         const { limit, page } = criteria;
         const cartDocuments = await cartSchema.paginate({}, { limit, page });
@@ -28,7 +16,7 @@ class CartMongooseRepository
             return new Cart({
                 id: document._id,
                 products: document.products.map((product) => new Product({
-                    product: product._id,
+                    id: product._id,
                     title: product.title,
                     description: product.description,
                     code: product.code,
@@ -47,7 +35,6 @@ class CartMongooseRepository
             pagination
         };
     }
-
 
     async getOne(id)
     {
@@ -75,53 +62,28 @@ class CartMongooseRepository
         }
     }
 
-    async update(data)
+    async create(data)
     {
-        const { cid, pid } = data;
-
-        const cartDoc = await cartSchema.findById(cid);
-
-        if (!cartDoc)
-        {
-            return null;
-        }
-
-        const productInCart = cartDoc.products.find((item) => item.product.id === pid);
-
-        if (productInCart)
-        {
-            productInCart.quantity += 1;
-        }
-        else
-        {
-            cartDoc.products = [...cartDoc.products, { product: pid, quantity: 1 }];
-        }
-
-        const newCartDoc = await cartSchema.findByIdAndUpdate(cid, cartDoc, { new: true });
-
-        if (newCartDoc)
-        {
-            return new Cart({
-                id: newCartDoc._id,
-                products: newCartDoc.products.map((doc) => new ProductInCart({
-                    id: doc._id,
-                    product: doc.product,
-                    quantity: doc.quantity
-                }))
-            });
-        }
-        else
-        {
-            return null;
-        }
+        const cartDoc = await cartSchema.create(data);
+        const newCart = cartDoc
+            ? new Cart({
+                id: cartDoc._id,
+                products: cartDoc.products
+            })
+            : null;
+        return newCart;
     }
 
-    async deleteCart(id, cart)
+    async update(data)
     {
-        const cartDocument = await cartSchema.findByIdAndUpdate({ _id: id }, cart, { new: true });
-        return {
-            _id: cartDocument._id
-        };
+        const { cid, update } = data;
+
+        const cartDoc = await cartSchema.findByIdAndUpdate(cid, update, { new: true });
+
+        return cartDoc ? new Cart({
+            id: cartDoc._id,
+            products: cartDoc.products.map(doc => new ProductInCart(doc))
+        }) : null;
     }
 
     async deleteProductFromCart(cid, newProducts)
@@ -134,6 +96,12 @@ class CartMongooseRepository
                 quantity: item.quantity
             }))
         });
+    }
+
+    async deleteOneCart(id) {
+        const cartDoc = await cartSchema.findByIdAndRemove(id);
+
+        return cartDoc ? true : null;
     }
 }
 

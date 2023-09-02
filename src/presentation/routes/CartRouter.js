@@ -1,17 +1,18 @@
 import { Router } from 'express';
-import { addCart, getCartById, getCarts, updateCart, deleteProductFromCart, deleteCart, updateQuantityOnCart, checkout } from '../controllers/cartController.js';
+import CartController from '../controllers/cartController.js';
 import auth from '../middlewares/auth.js';
 import authorization from '../middlewares/authorization.js';
 
 const CartRouter = Router();
 
-CartRouter.get('/', auth, authorization('getAllCarts'), getCarts);
-CartRouter.post('/', addCart);
-CartRouter.get('/:cid', getCartById);
-CartRouter.post('/:cid/checkout', auth, checkout);
-CartRouter.post('/:cid/product/:pid', updateCart);
-CartRouter.delete('/:cid', deleteCart);
-CartRouter.delete('/:cid/product/:pid', deleteProductFromCart);
-CartRouter.put('/:cid/product/:pid', updateQuantityOnCart);
+CartRouter.get('/', auth, authorization('getAllCarts'), CartController.getCarts);
+CartRouter.get('/:cid', CartController.getCartById);
+CartRouter.post('/', CartController.postCart);
+CartRouter.post('/:cid/product/:pid', CartController.postProductInCart)
+CartRouter.put('/:cid', CartController.updateCart);
+CartRouter.put('/:cid/product/:pid', CartController.updateProductInCart);
+CartRouter.post('/:cid/checkout', auth, CartController.checkout);
+CartRouter.delete('/:cid/product/:pid', CartController.deleteProductFromCart);
+CartRouter.delete('/:cid', CartController.deleteCart);
 
 export default CartRouter;
