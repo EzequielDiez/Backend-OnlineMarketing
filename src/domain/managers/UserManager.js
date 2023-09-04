@@ -10,19 +10,47 @@ class UserManager
         this.roleRepository = container.resolve('RoleRepository');
     }
 
-    async paginate(criteria)
+    async getAll(queryParams)
     {
-        return this.userRepository.paginate(criteria);
-    }
+        const { limit = 10, page = 1 } = queryParams;
 
-    async getOneByEmail(email)
-    {
-        return this.userRepository.getOneByEmail(email);
+        const parsedLimit = parseInt(limit, 10);
+        const parsedPage = parseInt(page, 10);
+
+        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+            throw new Error('Invalid pagination parameters');
+        }
+
+        const result = await this.userRepository.getAll({
+            limit: parsedLimit,
+            page: parsedPage
+        });
+        if (!result) throw new Error ('No users found');
+
+        return result;
     }
 
     async getOne(id)
     {
-        return this.userRepository.getOne(id);
+        const result = await this.userRepository.getOne(id);
+
+        if (!result) throw new Error ('No user found');
+
+        return result;
+    }
+
+    async create(data)
+    {
+        const user = await this.userRepository.create(data);
+        
+        return { ...user, password: undefined };
+    }
+
+    // MODIFICAR ABAJO
+
+    async getOneByEmail(email)
+    {
+        return this.userRepository.getOneByEmail(email);
     }
 
     async changePremium(data)
@@ -50,12 +78,6 @@ class UserManager
         const result = await this.userRepository.update({ uid: user.id, update: { role: role.id } });
 
         return result;
-    }
-
-    async create(data)
-    {
-        const user = await this.userRepository.create(data);
-        return { ...user, password: undefined };
     }
 
     async addDocuments(data)

@@ -5,66 +5,47 @@ import Role from '../../domain/entities/role.js';
 
 class UserMongooseRepository
 {
-    async paginate(criteria)
+    async getAll(criteria)
     {
-        try
-        {
-            const { limit, page } = criteria;
-            const userDocuments = await userSchema.paginate({}, { limit, page });
-            const { docs, ...pagination } = userDocuments;
+        const { limit, page } = criteria;
+        const userDocuments = await userSchema.paginate({}, { limit, page });
+        const { docs, ...pagination } = userDocuments;
 
-            const users = docs.map(document => new User ({
-                id: document._id,
-                firstName: document.firstName,
-                lastName: document.lastName,
-                email: document.email,
-                age: document.age,
-                cart: document.cart,
-                role: document.role,
-                documents: document.documents,
-                lastConnection: document.lastConnection
-            }));
+        const users = docs.map(document => new User ({
+            id: document._id,
+            firstName: document.firstName,
+            lastName: document.lastName,
+            email: document.email,
+            age: document.age,
+            cart: document.cart,
+            role: document.role,
+            documents: document.documents,
+            lastConnection: document.lastConnection
+        }));
 
-            return {
-                users,
-                pagination
-            };
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return {
+            users,
+            pagination
+        };
     }
 
     async getOne(id)
     {
-        try
-        {
-            const userDocument = await userSchema.findOne({ _id: id });
+        const userDocument = await userSchema.findOne({ _id: id });
 
-            if (!userDocument)
-            {
-                return null;
-            }
+        if (!userDocument) return null;
 
-            return new User ({
-                id: userDocument?._id,
-                firstName: userDocument?.firstName,
-                lastName: userDocument?.lastName,
-                email: userDocument?.email,
-                age: userDocument?.age,
-                cart: userDocument?.cart,
-                role: userDocument?.role,
-                documents: userDocument?.documents,
-                lastConnection: userDocument?.lastConnection
-            });
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return new User ({
+            id: userDocument?._id,
+            firstName: userDocument?.firstName,
+            lastName: userDocument?.lastName,
+            email: userDocument?.email,
+            age: userDocument?.age,
+            cart: userDocument?.cart,
+            role: userDocument?.role,
+            documents: userDocument?.documents,
+            lastConnection: userDocument?.lastConnection
+        });
     }
 
     async getOneByEmail(email)
@@ -73,10 +54,7 @@ class UserMongooseRepository
         {
             const userDocument = await userSchema.findOne({ email });
 
-            if (!userDocument)
-            {
-                return null;
-            }
+            if (!userDocument) return null;
 
             return new User ({
                 id: userDocument?._id,
@@ -100,33 +78,25 @@ class UserMongooseRepository
 
     async create(data)
     {
-        try
-        {
-            const userDocument = await userSchema.create(data);
+        const userDocument = await userSchema.create(data);
 
-            const cartDocument = await cartSchema.create({ products: [] });
+        const cartDocument = await cartSchema.create({ products: [] });
 
-            userDocument.cart = cartDocument._id;
-            await userDocument.save();
+        userDocument.cart = cartDocument._id;
+        await userDocument.save();
 
-            return new User ({
-                id: userDocument._id,
-                firstName: userDocument.firstName,
-                lastName: userDocument.lastName,
-                email: userDocument.email,
-                age: userDocument.age,
-                cart: userDocument.cart,
-                role: userDocument.role,
-                password: userDocument.password,
-                documents: userDocument.documents,
-                lastConnection: userDocument.lastConnection
-            });
-        }
-        catch (error)
-        {
-            console.error(error);
-            throw error;
-        }
+        return new User ({
+            id: userDocument._id,
+            firstName: userDocument.firstName,
+            lastName: userDocument.lastName,
+            email: userDocument.email,
+            age: userDocument.age,
+            cart: userDocument.cart,
+            role: userDocument.role,
+            password: userDocument.password,
+            documents: userDocument.documents,
+            lastConnection: userDocument.lastConnection
+        });
     }
 
     async update(data)
