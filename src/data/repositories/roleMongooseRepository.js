@@ -15,10 +15,10 @@ class RoleMongooseRepository
             permissions: document.permissions
         }));
 
-        return{
+        return {
             roles,
             paginationInfo
-        }
+        };
     }
 
     async getOne(id)

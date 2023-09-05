@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
 import container from '../../container.js';
 import EmailManager from './EmailManager.js';
-import { createHash, generateToken, isValidPassword, generateResetToken } from '../../shared/index.js';
-import userCreateValidation from '../validations/user/userCreateValidation.js';
+import { createHash, generateToken, isValidPassword, generateResetToken, generateLogoutToken } from '../../shared/index.js';
 
 class SessionManager
 {
@@ -13,7 +12,7 @@ class SessionManager
 
     async login(data)
     {
-        const { email, password } = data
+        const { email, password } = data;
 
         const user = await this.userRepository.getOneByEmail(email);
         const isHashedPassword = await isValidPassword(password, user.password);
@@ -23,15 +22,13 @@ class SessionManager
             throw new Error('Login failed, invalid password.');
         }
 
-        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() }})
+        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() } });
 
         return generateToken(user);
     }
 
     async signup(payload)
     {
-        await userCreateValidation.parseAsync(payload);
-
         const dto = {
             ...payload,
             password: await createHash(payload.password, 10)
@@ -40,6 +37,15 @@ class SessionManager
         const user = await this.userRepository.create(dto);
 
         return { ...user, password: undefined };
+    }
+
+    async logout(data)
+    {
+        const user = await this.userRepository.getOneByEmail(data);
+
+        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() } });
+
+        return generateLogoutToken;
     }
 
     async forgotPassword(data)
@@ -92,20 +98,6 @@ class SessionManager
         {
             throw new Error('Your token has expired');
         }
-    }
-
-    async changeLastConnection(data)
-    {
-        const user = await this.userRepository.getOneByEmail(data);
-
-        if (!user)
-        {
-            throw new Error ('Incorrect User');
-        }
-
-        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() } });
-
-        return true;
     }
 }
 
