@@ -56,37 +56,3 @@ class ProductController {
 }
 
 export default ProductController
-
-/* export const addProduct = async(req, res) =>
-{
-    try
-    {
-        const { title, description, code, price, status, stock, category, thumbnails } = req.body;
-
-        if (!title || !description || !code || !price || !status || !stock || !category || !thumbnails)
-        {
-            return res.status(400).json({ message: 'Missing required fields.' });
-        }
-
-        const newProduct = {
-            title,
-            description,
-            code,
-            price,
-            status,
-            stock,
-            category,
-            thumbnails
-        };
-
-        const manager = new ProductManager();
-        const productId = await manager.create({ product: newProduct, user: req.user }); // newProduct
-        console.log('productId', productId);
-        res.status(201).json({ status: 'success', productId, message: 'Product created.' });
-    }
-    catch (error)
-    {
-        console.log('Error in POST /api/products:', error);
-        res.status(500).json({ message: 'Ocurrió un error al agregar el producto.' });
-    }
-}; */

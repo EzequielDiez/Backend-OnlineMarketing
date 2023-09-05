@@ -2,7 +2,7 @@
   "name": "coderhouse-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js  src/tests/sessionIntegrate.test.js src/tests/productIntegrate.test.js src/tests/cartIntegrate.test.js",
