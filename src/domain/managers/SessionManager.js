@@ -3,7 +3,6 @@ import container from '../../container.js';
 import EmailManager from './EmailManager.js';
 import { createHash, generateToken, isValidPassword, generateResetToken } from '../../shared/index.js';
 import userCreateValidation from '../validations/user/userCreateValidation.js';
-import loginValidation from '../validations/session/loginValidation.js';
 
 class SessionManager
 {
@@ -12,9 +11,9 @@ class SessionManager
         this.userRepository = container.resolve('UserRepository');
     }
 
-    async login(email, password)
+    async login(data)
     {
-        await loginValidation.parseAsync({ email, password });
+        const { email, password } = data
 
         const user = await this.userRepository.getOneByEmail(email);
         const isHashedPassword = await isValidPassword(password, user.password);
@@ -24,7 +23,9 @@ class SessionManager
             throw new Error('Login failed, invalid password.');
         }
 
-        return await generateToken(user);
+        await this.userRepository.update({ uid: user.id, update: { lastConnection: Date.now() }})
+
+        return generateToken(user);
     }
 
     async signup(payload)

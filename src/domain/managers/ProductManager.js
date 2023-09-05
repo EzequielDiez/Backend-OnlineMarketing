@@ -15,7 +15,8 @@ class ProductManager
         const parsedLimit = parseInt(limit, 10);
         const parsedPage = parseInt(page, 10);
 
-        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0)
+        {
             throw new Error('Invalid pagination parameters');
         }
 
@@ -23,7 +24,10 @@ class ProductManager
             limit: parsedLimit,
             page: parsedPage
         });
-        if (!result) throw new Error ('No products found');
+        if (!result)
+        {
+            throw new Error ('No products found');
+        }
 
         return result;
     }
@@ -32,7 +36,10 @@ class ProductManager
     {
         const result = await this.productRepository.getOne(id);
 
-        if (!result) throw new Error ('No product found');
+        if (!result)
+        {
+            throw new Error ('No product found');
+        }
 
         return result;
     }
@@ -49,17 +56,23 @@ class ProductManager
 
     async update(data)
     {
-        const { pid, user, ...update } = data
+        const { pid, user, ...update } = data;
 
-        const product = await this.productRepository.getOne(pid)
+        const product = await this.productRepository.getOne(pid);
 
-        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner))) throw new Error("Unauthorized");
+        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner)))
+        {
+            throw new Error('Unauthorized');
+        }
 
         const result = await this.productRepository.update(pid, update, { new: true });
-        
-        if(!result) throw new Error ('Product not updated')
 
-        return result
+        if (!result)
+        {
+            throw new Error ('Product not updated');
+        }
+
+        return result;
     }
 
     async delete(data)
@@ -68,12 +81,18 @@ class ProductManager
 
         const product = await this.productRepository.getOne(id);
 
-        if (!product || !product.status) throw new Error('Product not found');
+        if (!product || !product.status)
+        {
+            throw new Error('Product not found');
+        }
 
-        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner))) throw new Error("Unauthorized");
+        if (!(user.role.name === 'admin' || (user.role.name === 'premium' && user.email === product.owner)))
+        {
+            throw new Error('Unauthorized');
+        }
 
         const result = await this.productRepository.delete(id, { status: false }, { new: true });
-        
+
         return result;
     }
 }

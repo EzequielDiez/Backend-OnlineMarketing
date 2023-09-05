@@ -8,7 +8,7 @@ const CartRouter = Router();
 CartRouter.get('/', auth, authorization('getAllCarts'), CartController.getCarts);
 CartRouter.get('/:cid', CartController.getCartById);
 CartRouter.post('/', CartController.postCart);
-CartRouter.post('/:cid/product/:pid', CartController.postProductInCart)
+CartRouter.post('/:cid/product/:pid', CartController.postProductInCart);
 CartRouter.put('/:cid', CartController.updateCart);
 CartRouter.put('/:cid/product/:pid', CartController.updateProductInCart);
 CartRouter.post('/:cid/checkout', auth, CartController.checkout);

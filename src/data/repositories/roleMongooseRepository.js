@@ -3,11 +3,11 @@ import Role from '../../domain/entities/role.js';
 
 class RoleMongooseRepository
 {
-    async paginate(criteria)
+    async getAll(criteria)
     {
         const { limit, page } = criteria;
         const roleDocuments = await RoleSchema.paginate({}, { limit, page });
-        const { docs, ...pagination } = roleDocuments;
+        const { docs, ...paginationInfo } = roleDocuments;
 
         const roles = docs.map(document => new Role ({
             id: document._id,
@@ -15,10 +15,10 @@ class RoleMongooseRepository
             permissions: document.permissions
         }));
 
-        return {
+        return{
             roles,
-            pagination
-        };
+            paginationInfo
+        }
     }
 
     async getOne(id)
@@ -67,11 +67,6 @@ class RoleMongooseRepository
     async updateOne(id, data)
     {
         const document = await RoleSchema.findOneAndUpdate({ _id: id }, data, { new: true });
-
-        if (!document)
-        {
-            return null;
-        }
 
         return new Role({
             id: document._id,

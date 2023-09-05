@@ -18,7 +18,8 @@ class CartManager
         const parsedLimit = parseInt(limit, 10);
         const parsedPage = parseInt(page, 10);
 
-        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0)
+        {
             throw new Error('Invalid pagination parameters');
         }
 
@@ -26,7 +27,10 @@ class CartManager
             limit: parsedLimit,
             page: parsedPage
         });
-        if (!result) throw new Error ('No carts found');
+        if (!result)
+        {
+            throw new Error ('No carts found');
+        }
 
         return result;
     }
@@ -35,7 +39,10 @@ class CartManager
     {
         const result = await this.cartRepository.getOne(id);
 
-        if (!result) throw new Error ('No cart found');
+        if (!result)
+        {
+            throw new Error ('No cart found');
+        }
 
         return result;
     }
@@ -48,19 +55,32 @@ class CartManager
 
     async addOneProduct(data)
     {
-        const { cid, pid } = data
+        const { cid, pid } = data;
 
         const product = await this.productRepository.getOne(pid);
 
-        if (!product || !product.status) throw new Error('Product not found');
+        if (!product || !product.status)
+        {
+            throw new Error('Product not found');
+        }
 
-        const cart = await this.cartRepository.getOne(cid)
+        const cart = await this.cartRepository.getOne(cid);
 
-        if (!cart) throw new Error("Cart not found");
+        if (!cart)
+        {
+            throw new Error('Cart not found');
+        }
 
         const productInCart = cart.products.find((item) => item.product.id === pid);
 
-        productInCart ? productInCart.quantity += 1 : cart.products = [...cart.products, { product: pid, quantity: 1 }];
+        if (productInCart)
+        {
+            productInCart.quantity += 1;
+        }
+        else
+        {
+            cart.products = [...cart.products, { product: pid, quantity: 1 }];
+        }
 
         const newCart = cart.products.map(item => ({ product: item.product.id ?? item.product, quantity: item.quantity }));
 
@@ -73,36 +93,52 @@ class CartManager
     {
         const { cid, products } = data;
 
-        for (const item of products) {
+        for (const item of products)
+        {
             const productExist = await this.productRepository.getOne(item.product);
 
-            if (!productExist) throw new Error("Product inside the cart not found");
+            if (!productExist)
+            {
+                throw new Error('Product inside the cart not found');
+            }
         }
-        
+
         const result = await this.cartRepository.update({ cid, update: { products } });
 
-        if (!result) throw new Error('Cart not found');
-        
-        return result
+        if (!result)
+        {
+            throw new Error('Cart not found');
+        }
+
+        return result;
     }
 
     async updateProduct(data)
     {
-        const { cid, pid, quantity: newQuantity } = data
+        const { cid, pid, quantity: newQuantity } = data;
 
-        const product = await this.productRepository.getOne(pid)
+        const product = await this.productRepository.getOne(pid);
 
-        if (!product) throw new Error('Product not found')
+        if (!product)
+        {
+            throw new Error('Product not found');
+        }
 
-        const cart = await this.cartRepository.getOne(cid)
+        const cart = await this.cartRepository.getOne(cid);
 
-        if (!cart) throw new Error("Cart not found");
+        if (!cart)
+        {
+            throw new Error('Cart not found');
+        }
 
-        const productInCart = cart.products.find((item) => item.product.id === pid)
+        const productInCart = cart.products.find((item) => item.product.id === pid);
 
-        if (!productInCart) throw new Error('Product not found in cart')
+        if (!productInCart)
+        {
+            throw new Error('Product not found in cart');
+        }
 
-        productInCart.quantity = newQuantity
+        productInCart.quantity = newQuantity;
 
         const newCart = cart.products.map(item => ({ product: item.product.id ?? item.product, quantity: item.quantity }));
 
@@ -119,12 +155,18 @@ class CartManager
 
         for (const productInCart of cart.products)
         {
-            if (productInCart.product.owner === user) throw new Error (`You can't add the same product you add: ${productInCart.product.title} - ${productInCart.product.code}`);
+            if (productInCart.product.owner === user)
+            {
+                throw new Error (`You can't add the same product you add: ${productInCart.product.title} - ${productInCart.product.code}`);
+            }
 
             const newStock = productInCart.product.stock - productInCart.quantity;
 
-            if (newStock < 0) throw new Error( `The product ${productInCart.product.title} - ${productInCart.product.code} doesn't have stock`);
-            
+            if (newStock < 0)
+            {
+                throw new Error(`The product ${productInCart.product.title} - ${productInCart.product.code} doesn't have stock`);
+            }
+
             total += productInCart.product.price * productInCart.quantity;
 
             await this.productRepository.update(productInCart.product.id, {
@@ -159,32 +201,41 @@ class CartManager
 
     async deleteProduct(data)
     {
-        const { cid, pid } = data
+        const { cid, pid } = data;
 
-        const product = await this.productRepository.getOne(pid)
+        const product = await this.productRepository.getOne(pid);
 
-        if (!product) throw new Error ('Product not found')
+        if (!product)
+        {
+            throw new Error ('Product not found');
+        }
 
-        const cart = await this.cartRepository.getOne(cid)
+        const cart = await this.cartRepository.getOne(cid);
 
-        if (!cart) throw new Error ('Cart not found')
+        if (!cart)
+        {
+            throw new Error ('Cart not found');
+        }
 
-        const filter = cart.products.filter(item => item.product.id !== pid)
+        const filter = cart.products.filter(item => item.product.id !== pid);
 
-        cart.products = filter
+        cart.products = filter;
 
-        const newCart = cart.products.map(item => ({ product: item.product.id ?? item.product, quantity: item.quantity}))
+        const newCart = cart.products.map(item => ({ product: item.product.id ?? item.product, quantity: item.quantity }));
 
-        const result = await this.cartRepository.update({ cid, update: { products: newCart }})
+        const result = await this.cartRepository.update({ cid, update: { products: newCart } });
 
-        return result
+        return result;
     }
-    
+
     async deleteOneCart(cid)
     {
         const result = await this.cartRepository.deleteOneCart(cid);
 
-        if (!result) throw new Error("Cart not found");
+        if (!result)
+        {
+            throw new Error('Cart not found');
+        }
 
         return result;
     }

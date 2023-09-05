@@ -17,7 +17,8 @@ class UserManager
         const parsedLimit = parseInt(limit, 10);
         const parsedPage = parseInt(page, 10);
 
-        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+        if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0)
+        {
             throw new Error('Invalid pagination parameters');
         }
 
@@ -25,7 +26,10 @@ class UserManager
             limit: parsedLimit,
             page: parsedPage
         });
-        if (!result) throw new Error ('No users found');
+        if (!result)
+        {
+            throw new Error ('No users found');
+        }
 
         return result;
     }
@@ -34,23 +38,24 @@ class UserManager
     {
         const result = await this.userRepository.getOne(id);
 
-        if (!result) throw new Error ('No user found');
+        if (!result)
+        {
+            throw new Error ('No user found');
+        }
 
         return result;
+    }
+
+    async getOneByEmail(email)
+    {
+        return this.userRepository.getOneByEmail(email);
     }
 
     async create(data)
     {
         const user = await this.userRepository.create(data);
-        
+
         return { ...user, password: undefined };
-    }
-
-    // MODIFICAR ABAJO
-
-    async getOneByEmail(email)
-    {
-        return this.userRepository.getOneByEmail(email);
     }
 
     async changePremium(data)
@@ -106,9 +111,9 @@ class UserManager
         return true;
     }
 
-    async updateOne(id, data)
+    async update(id, data)
     {
-        return this.userRepository.updateOne(id, data);
+        return this.userRepository.update(id, data);
     }
 
     async deleteOne(id)
@@ -118,9 +123,8 @@ class UserManager
 
     async deleteInactives()
     {
-        const usersPaginate = await this.userRepository.paginate({ limit: 500, page: 1 });
+        const usersPaginate = await this.userRepository.getAll({ limit: 500, page: 1 });
         const users = usersPaginate.users;
-        console.log('users', users);
 
         if (!users)
         {

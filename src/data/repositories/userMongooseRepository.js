@@ -33,7 +33,10 @@ class UserMongooseRepository
     {
         const userDocument = await userSchema.findOne({ _id: id });
 
-        if (!userDocument) return null;
+        if (!userDocument)
+        {
+            return null;
+        }
 
         return new User ({
             id: userDocument?._id,
@@ -54,7 +57,10 @@ class UserMongooseRepository
         {
             const userDocument = await userSchema.findOne({ email });
 
-            if (!userDocument) return null;
+            if (!userDocument)
+            {
+                return null;
+            }
 
             return new User ({
                 id: userDocument?._id,

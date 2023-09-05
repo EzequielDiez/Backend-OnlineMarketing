@@ -1,85 +1,56 @@
 import RoleManager from '../../domain/managers/RoleManager.js';
 
+class RoleController {
 
-export const list = async(req, res, next) =>
-{
-    try
-    {
-        const { limit, page } = req.query;
-
-        const manager = new RoleManager();
-        const roles = await manager.paginate({ limit, page });
-
-        res.send({ status: 'success', roles: roles.docs, ...roles, docs: undefined });
+    static list = async (req, res, next) => {
+        try {
+            const roleManager = new RoleManager();
+            const roles = await roleManager.getAll(req.query);
+            res.status(200).send({ status: 'success', roles: roles.docs, ...roles, docs: undefined });
+        } catch (error) {
+            next(error)
+        }
     }
-    catch (e)
-    {
-        next(e);
+
+    static getRoleById = async (req, res, next) => {
+        try {
+            const roleManager = new RoleManager();
+            const role = await roleManager.getOne(req.params.id);
+            res.status(200).send({ status: 'success', role, message: 'Role found' });
+        } catch (error) {
+            next(error)
+        }
     }
-};
 
-export const getOne = async(req, res, next) =>
-{
-    try
-    {
-        const { id } = req.params;
-
-        const manager = new RoleManager();
-        const role = await manager.getOne(id);
-
-        res.send({ status: 'success', role });
+    static postRole = async (req, res, next) => {
+        try {
+            const roleManager = new RoleManager();
+            const role = await roleManager.create(req.body);
+            res.status(201).send({ status: 'success', role, message: 'Role created.' });
+        } catch (error) {
+            next(error)
+        }
     }
-    catch (e)
-    {
-        next(e);
+
+    static putRole = async (req, res, next) => {
+        try {
+            const roleManager = new RoleManager();
+            const role = await roleManager.updateOne(req.params.id, req.body);
+            res.status(200).send({ status: 'success', role, message: 'Role updated.' });
+        } catch (error) {
+            next(error)
+        }
     }
-};
 
-export const save = async(req, res, next) =>
-{
-    try
-    {
-        const manager = new RoleManager();
-        const role = await manager.create(req.body);
-
-        res.send({ status: 'success', role, message: 'Role created.' });
+    static deleteOneRole = async (req, res, next) => {
+        try {
+            const roleManager = new RoleManager();
+            await roleManager.deleteOne(req.params.id);
+            res.send({ status: 'success', message: 'Role deleted.' });
+        } catch (error) {
+            next(error)
+        }
     }
-    catch (e)
-    {
-        next(e);
-    }
-};
+}
 
-export const update = async(req, res, next) =>
-{
-    try
-    {
-        const { id } = req.params;
-
-        const manager = new RoleManager();
-        const result = await manager.updateOne(id, req.body);
-
-        res.send({ status: 'success', result, message: 'Role updated.' });
-    }
-    catch (e)
-    {
-        next(e);
-    }
-};
-
-export const deleteOne = async(req, res, next) =>
-{
-    try
-    {
-        const { id } = req.params;
-
-        const manager = new RoleManager();
-        await manager.deleteOne(id);
-
-        res.send({ status: 'success', message: 'Role deleted.' });
-    }
-    catch (e)
-    {
-        next(e);
-    }
-};
+export default RoleController

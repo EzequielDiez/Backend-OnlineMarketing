@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { deleteOne, update, changePremium, insertDocuments } from '../controllers/userController.js';
 import UserController from '../controllers/userController.js';
 import auth from '../middlewares/auth.js';
 import authorization from '../middlewares/authorization.js';
@@ -13,8 +12,9 @@ userRouter.get('/', authorization('getAllUsers'), UserController.getUsers);
 userRouter.get('/:id', UserController.getUserById);
 userRouter.post('/', authorization('addOneUser'), UserController.postUser);
 userRouter.put('/premium', UserController.changeToPremium);
-userRouter.post('/documents', uploader.array('documents', 4), insertDocuments);
-userRouter.put('/:id', authorization('updateUser'), update);
-userRouter.delete('/:id', authorization('deleteUser'), deleteOne);
+userRouter.post('/documents', uploader.array('documents', 4), UserController.postDocuments);
+userRouter.put('/:id', UserController.putUser);
+userRouter.delete('/:id', authorization('deleteUser'), UserController.deleteOneUser);
+userRouter.delete('/', authorization('deleteInactive'), UserController.deleteInactiveUsers);
 
 export default userRouter;

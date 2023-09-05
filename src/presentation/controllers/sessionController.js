@@ -3,6 +3,25 @@ import loginValidation from '../../domain/validations/session/loginValidation.js
 
 import { generateToken, generateLogoutToken } from '../../shared/index.js';
 
+class SessionController {
+
+    static login = async (req, res, next) => {
+        try {
+            const sessionManager = new SessionManager()
+            const accessToken = await sessionManager.login(req.body)
+            res.cookie('accessToken', accessToken, {
+                maxAge: 60 * 60 * 1000,
+                httpOnly: true
+            }).status(200).send({ status: 'success', message: 'You have logged in', accessToken });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+}
+
+export default SessionController
+
 export const login = async(req, res, next) =>
 {
     try
@@ -11,14 +30,14 @@ export const login = async(req, res, next) =>
 
         await loginValidation.parseAsync(req.body);
 
-        const manager = new SessionManager();
+        /* const manager = new SessionManager(); */
         await manager.changeLastConnection(email);
-        const accessToken = await manager.login(email, password);
+        /* const accessToken = await manager.login(email, password); */
 
-        res.cookie('accessToken', accessToken, {
+        /* res.cookie('accessToken', accessToken, {
             maxAge: 60 * 60 * 1000,
             httpOnly: true
-        }).status(200).send({ message: 'You have successfully logged in', accessToken });
+        }).status(200).send({ message: 'You have successfully logged in', accessToken }); */
     }
     catch (error)
     {

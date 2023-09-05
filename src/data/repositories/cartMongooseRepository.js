@@ -98,7 +98,8 @@ class CartMongooseRepository
         });
     }
 
-    async deleteOneCart(id) {
+    async deleteOneCart(id)
+    {
         const cartDoc = await cartSchema.findByIdAndRemove(id);
 
         return cartDoc ? true : null;
