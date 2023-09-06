@@ -218,7 +218,9 @@ class CartManager
 
             return {
                 sessionId: session.id,
-                ticket
+                sessionUrl: session.url,
+                ticket,
+
             };
         }
         catch (error)

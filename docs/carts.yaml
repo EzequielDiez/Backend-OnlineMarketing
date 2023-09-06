@@ -76,7 +76,7 @@ components:
         user:
           type: string
           description: Email del usuario asociado al ticket
- 
+
 paths:
   /api/carts:
     get:
@@ -168,7 +168,7 @@ paths:
         '404':
           description: Carrito no encontrado
 
-/api/carts/{id}/checkout:
+  /api/carts/{id}/checkout:
     post:
       summary: Procesar el checkout del carrito
       tags:
