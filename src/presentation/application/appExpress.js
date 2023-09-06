@@ -45,7 +45,7 @@ class AppExpress
         const port = process.env.PORT || 8080;
         return this.app.listen(port, () =>
         {
-            console.log('Server started on port 8080');
+            console.log(`Server listening on port ${port}`);
         });
     }
 

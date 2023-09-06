@@ -1,7 +1,7 @@
 paths:
   /api/roles:
     get:
-      tags: 
+      tags:
         - Roles
       summary: Obtener lista de roles paginados
       description: Obtiene una lista de roles paginados.
@@ -42,7 +42,7 @@ paths:
                     type: integer
 
     post:
-      tags: 
+      tags:
         - Roles
       summary: Crear un nuevo rol
       description: Crea un nuevo rol.
@@ -73,7 +73,7 @@ paths:
         schema:
           type: string
     get:
-      tags: 
+      tags:
         - Roles
       summary: Obtener un rol por ID
       description: Obtiene un rol por su ID.
@@ -90,7 +90,7 @@ paths:
           description: Rol no encontrado.
 
     put:
-      tags: 
+      tags:
         - Roles
       summary: Actualizar un rol por ID
       description: Actualiza un rol por su ID.
@@ -118,7 +118,7 @@ paths:
           description: Error de validación en los datos.
 
     delete:
-      tags: 
+      tags:
         - Roles
       summary: Eliminar un rol por ID
       description: Elimina un rol por su ID.
@@ -142,7 +142,7 @@ components:
     Role:
       type: object
       properties:
-        _id:
+        id:
           type: string
           description: ID del rol.
         name:

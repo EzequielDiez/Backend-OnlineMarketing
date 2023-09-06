@@ -20,5 +20,4 @@ void (async() =>
     const cron = new CronJob('0 */5 * * *', DeleteInactiveUsersCron);
 
     cron.start();
-    
 })();

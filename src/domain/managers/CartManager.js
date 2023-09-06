@@ -1,6 +1,9 @@
 import container from '../../container.js';
 import { nanoid } from 'nanoid';
 import EmailManager from './EmailManager.js';
+import stripe from 'stripe';
+import dotenv from 'dotenv';
+dotenv.config();
 
 class CartManager
 {
@@ -157,7 +160,7 @@ class CartManager
         {
             if (productInCart.product.owner === user)
             {
-                throw new Error (`You can't add the same product you add: ${productInCart.product.title} - ${productInCart.product.code}`);
+                throw new Error (`You can't add the same product you added: ${productInCart.product.title} - ${productInCart.product.code}`);
             }
 
             const newStock = productInCart.product.stock - productInCart.quantity;
@@ -168,35 +171,61 @@ class CartManager
             }
 
             total += productInCart.product.price * productInCart.quantity;
-
-            await this.productRepository.update(productInCart.product.id, {
-                stock: newStock,
-                status: newStock > 0 ? true : false
-            });
         }
 
         const code = nanoid(15);
 
-        await EmailManager.sendEmail({
-            templateFileName: 'ticketBuyTemplate.hbs',
-            payload: {
-                email: user,
-                subject: 'Ticket de compra',
+        const stripeSecretKey = process.env.STRIPE_PRIVATE_KEY;
+        const stripeInstance = stripe(stripeSecretKey);
+
+        try
+        {
+            const session = await stripeInstance.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: cart.products.map((productInCart) => ({
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: productInCart.product.title
+                        },
+                        unit_amount: productInCart.product.price * 100
+                    },
+                    quantity: productInCart.quantity
+                })),
+                mode: 'payment',
+                success_url: 'https://tudominio.com/pago-exitoso',
+                cancel_url: 'https://tudominio.com/pago-cancelado'
+            });
+
+            await EmailManager.sendEmail({
+                templateFileName: 'ticketBuyTemplate.hbs',
+                payload: {
+                    email: user,
+                    subject: 'Ticket de compra',
+                    code,
+                    total
+                }
+            });
+
+            await this.cartRepository.deleteOneCart(cart.id);
+
+            const ticket = await this.ticketRepository.create({
                 code,
-                total
-            }
-        });
+                date: new Date(),
+                total,
+                user
+            });
 
-        await this.cartRepository.deleteCart(cart.id);
-
-        const ticket = await this.ticketRepository.create({
-            code,
-            date: new Date(),
-            total,
-            user
-        });
-
-        return ticket;
+            return {
+                sessionId: session.id,
+                ticket
+            };
+        }
+        catch (error)
+        {
+            console.error('Error al crear la sesión de pago en Stripe:', error);
+            throw error;
+        }
     }
 
     async deleteProduct(data)

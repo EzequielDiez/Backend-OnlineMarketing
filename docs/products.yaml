@@ -1,9 +1,28 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+  description: API for managing products
+
 paths:
   /api/products:
     get:
       summary: Get all products
       tags:
         - Products
+      parameters:
+        - name: limit
+          in: query
+          description: Number of products per page (default:10)
+          schema:
+            type: integer
+            minimum: 1
+        - name: page
+          in: query
+          description: Page number (default:1)
+          schema:
+            type: integer
+            minimum: 1
       responses:
         '200':
           description: A list of products
@@ -17,26 +36,11 @@ paths:
                     items:
                       $ref: '#/components/schemas/Product'
                   totalProducts:
-                    type: number
+                    type: integer
                   currentPage:
-                    type: number
+                    type: integer
                   totalPages:
-                    type: number
-      parameters:
-        - name: limit
-          in: query
-          description: Number of products per page
-          schema:
-            type: integer
-            minimum: 1
-            default: 10
-        - name: page
-          in: query
-          description: Page number
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
+                    type: integer
 
     post:
       summary: Create a new product
@@ -191,7 +195,9 @@ components:
         status: true
         stock: 100
         category: Electronics
-        thumbnails: ["/images/thumbnail1.jpg", "/images/thumbnail2.jpg"]
+        thumbnails:
+          - "/images/thumbnail1.jpg"
+          - "/images/thumbnail2.jpg"
 
     ProductInput:
       type: object
@@ -222,4 +228,6 @@ components:
         status: true
         stock: 100
         category: Electronics
-        thumbnails: ["/images/thumbnail1.jpg", "/images/thumbnail2.jpg"]
+        thumbnails:
+          - "/images/thumbnail1.jpg"
+          - "/images/thumbnail2.jpg"

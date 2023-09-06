@@ -3,8 +3,10 @@ components:
     Cart:
       type: object
       properties:
-        _id:
+        id:
           type: string
+          format: uuid
+          description: Identificador único del carrito
         products:
           type: array
           items:
@@ -12,6 +14,7 @@ components:
             properties:
               product:
                 type: string
+                format: uuid
                 description: ID del producto agregado al carrito
               quantity:
                 type: integer
@@ -22,8 +25,10 @@ components:
     Product:
       type: object
       properties:
-        _id:
+        id:
           type: string
+          format: uuid
+          description: Identificador único del producto
         title:
           type: string
           description: Título del producto
@@ -54,14 +59,16 @@ components:
     Ticket:
       type: object
       properties:
-        _id:
+        id:
           type: string
+          format: uuid
+          description: Identificador único del ticket
         code:
           type: string
           description: Código del ticket
         date:
           type: string
-          format: date
+          format: date-time
           description: Fecha del ticket
         total:
           type: number
@@ -69,13 +76,13 @@ components:
         user:
           type: string
           description: Email del usuario asociado al ticket
-
+ 
 paths:
   /api/carts:
     get:
       summary: Obtener todos los carritos
       tags:
-        - Carts
+        - Carritos
       parameters:
         - name: limit
           in: query
@@ -93,7 +100,7 @@ paths:
             format: int32
       responses:
         '200':
-          description: OK
+          description: Éxito
           content:
             application/json:
               schema:
@@ -104,7 +111,7 @@ paths:
     post:
       summary: Agregar un nuevo carrito
       tags:
-        - Carts
+        - Carritos
       requestBody:
         description: Datos del carrito a agregar
         required: true
@@ -120,21 +127,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Cart'
 
-  /api/carts/{cid}:
+  /api/carts/{id}:
     get:
       summary: Obtener un carrito por su ID
       tags:
-        - Carts
+        - Carritos
       parameters:
-        - name: cid
+        - name: id
           in: path
           required: true
           description: ID del carrito a obtener
           schema:
             type: string
+            format: uuid
       responses:
         '200':
-          description: OK
+          description: Éxito
           content:
             application/json:
               schema:
@@ -145,32 +153,34 @@ paths:
     delete:
       summary: Eliminar un carrito por su ID
       tags:
-        - Carts
+        - Carritos
       parameters:
-        - name: cid
+        - name: id
           in: path
           required: true
           description: ID del carrito a eliminar
           schema:
             type: string
+            format: uuid
       responses:
         '204':
           description: Carrito eliminado exitosamente
         '404':
           description: Carrito no encontrado
 
-  /api/carts/{cid}/checkout:
+/api/carts/{id}/checkout:
     post:
       summary: Procesar el checkout del carrito
       tags:
-        - Carts
+        - Carritos
       parameters:
-        - name: cid
+        - name: id
           in: path
           required: true
           description: ID del carrito a procesar el checkout
           schema:
             type: string
+            format: uuid
       requestBody:
         description: Datos del checkout
         required: true
@@ -179,14 +189,10 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: string
-                  description: ID del carrito a procesar
                 user:
                   type: string
                   description: Email del usuario para enviar el ticket
               required:
-                - id
                 - user
       responses:
         '200':
@@ -195,12 +201,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ticket'
+        '400':
+          description: Error en la solicitud
+        '404':
+          description: Carrito no encontrado
 
   /api/carts/{cid}/product/{pid}:
     post:
       summary: Agregar un producto al carrito
       tags:
-        - Carts
+        - Carritos
       parameters:
         - name: cid
           in: path
@@ -208,12 +218,14 @@ paths:
           description: ID del carrito al que se agregará el producto
           schema:
             type: string
+            format: uuid
         - name: pid
           in: path
           required: true
           description: ID del producto a agregar al carrito
           schema:
             type: string
+            format: uuid
       requestBody:
         description: Datos del producto a agregar
         required: true
@@ -238,7 +250,7 @@ paths:
     delete:
       summary: Eliminar un producto del carrito
       tags:
-        - Carts
+        - Carritos
       parameters:
         - name: cid
           in: path
@@ -246,12 +258,14 @@ paths:
           description: ID del carrito al que se eliminará el producto
           schema:
             type: string
+            format: uuid
         - name: pid
           in: path
           required: true
           description: ID del producto a eliminar del carrito
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: Producto eliminado exitosamente
@@ -261,7 +275,7 @@ paths:
     put:
       summary: Actualizar la cantidad de un producto en el carrito
       tags:
-        - Carts
+        - Carritos
       parameters:
         - name: cid
           in: path
@@ -269,12 +283,14 @@ paths:
           description: ID del carrito al que se actualizará la cantidad del producto
           schema:
             type: string
+            format: uuid
         - name: pid
           in: path
           required: true
           description: ID del producto al que se actualizará la cantidad
           schema:
             type: string
+            format: uuid
       requestBody:
         description: Nueva cantidad del producto en el carrito
         required: true
